@@ -1,6 +1,6 @@
 # MANGA ARCHIVE
 
-MANGA ARCHIVE es una aplicación de escritorio diseñada para facilitar la gestión y el seguimiento de los registros de manga en una tienda. Esta aplicación eficiente y fácil de usar está destinada a simplificar el proceso de almacenamiento y seguimiento de inventario de mangas en una tienda, ofreciendo una solución integral y centralizada para los amantes del manga y los propietarios de tiendas por igual.
+MANGA ARCHIVE es una aplicación de escritorio desarrollada en Java Swing con una base de datos SQL, diseñada para simplificar la gestión y seguimiento de registros de mangas en tiendas. Esta aplicación eficiente y fácil de usar está destinada a simplificar el proceso de almacenamiento y seguimiento de inventario de mangas en una tienda, ofreciendo una solución integral y centralizada para los amantes del manga y los propietarios de tiendas por igual.
 
 ## Características principales
 
@@ -15,4 +15,3 @@ MANGA ARCHIVE es una aplicación de escritorio diseñada para facilitar la gesti
 - Sistema Operativo: Compatible con Windows, macOS y Linux.
 - Espacio en Disco: Se recomienda un mínimo de 200 MB de espacio en disco para un funcionamiento óptimo.
 - Memoria RAM: Se recomienda al menos 2 GB de RAM.
-  
