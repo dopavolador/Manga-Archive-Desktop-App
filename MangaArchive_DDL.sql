@@ -41,8 +41,8 @@ CREATE TABLE manga (
 ALTER TABLE manga ADD CONSTRAINT pk_man PRIMARY KEY ( id );
 
 CREATE TABLE nacionalidad (
-    id         NUMBER,
-    iso        CHAR(2) NOT NULL,
+    id         NUMBER GENERATED ALWAYS AS IDENTITY,
+    iso        CHAR(3) NOT NULL,
     pais       VARCHAR2(80) NOT NULL,
     gentilicio VARCHAR2(80) NOT NULL
 );
