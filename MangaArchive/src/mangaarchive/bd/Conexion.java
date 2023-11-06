@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author ASUS-TUF-GAMING
+ * @author Alvaro Mora Y Bastian Heresmann
  */
 
 public class Conexion implements Credenciales {
