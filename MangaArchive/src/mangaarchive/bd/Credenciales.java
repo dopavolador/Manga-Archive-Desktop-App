@@ -1,4 +1,6 @@
-package mangaarchive.controlador;
+
+
+package mangaarchive.bd;
 
 public interface Credenciales {
     public String URL     = "jdbc:mysql://localhost:3306/equipo_2DB";
