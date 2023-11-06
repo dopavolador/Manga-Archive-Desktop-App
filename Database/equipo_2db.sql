@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-11-2023 a las 23:55:22
--- Versión del servidor: 10.4.21-MariaDB
--- Versión de PHP: 8.0.11
+-- Tiempo de generación: 06-11-2023 a las 13:27:52
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `equipo_2db`
 --
+CREATE DATABASE IF NOT EXISTS `equipo_2db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `equipo_2db`;
 
 -- --------------------------------------------------------
 
@@ -31,7 +33,7 @@ CREATE TABLE `autor` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `nacionalidad_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -42,7 +44,7 @@ CREATE TABLE `autor` (
 CREATE TABLE `demografia` (
   `id` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `demografia`
@@ -64,7 +66,7 @@ INSERT INTO `demografia` (`id`, `nombre`) VALUES
 CREATE TABLE `genero` (
   `manga_id` int(11) NOT NULL,
   `tipo_genero_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -78,7 +80,7 @@ CREATE TABLE `manga` (
   `precio` decimal(10,2) NOT NULL,
   `autor_id` int(11) NOT NULL,
   `demografia_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -91,7 +93,7 @@ CREATE TABLE `nacionalidad` (
   `iso` char(3) NOT NULL,
   `pais` varchar(80) NOT NULL,
   `gentilicio` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `nacionalidad`
@@ -309,7 +311,7 @@ INSERT INTO `nacionalidad` (`id`, `iso`, `pais`, `gentilicio`) VALUES
 CREATE TABLE `tipo_genero` (
   `id` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipo_genero`
@@ -362,7 +364,7 @@ CREATE TABLE `tomo` (
   `manga_id` int(11) NOT NULL,
   `tomo_num` int(11) NOT NULL,
   `stock` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tablas volcadas
