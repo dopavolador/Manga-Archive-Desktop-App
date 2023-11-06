@@ -14,140 +14,276 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu4 = new javax.swing.JMenu();
+        tabs = new javax.swing.JTabbedPane();
+        addPanel = new javax.swing.JPanel();
+        mangaLabel = new javax.swing.JLabel();
+        mangaText = new javax.swing.JTextField();
+        authorLabel = new javax.swing.JLabel();
+        authorText = new javax.swing.JTextField();
+        countryLabel = new javax.swing.JLabel();
+        countryChoice = new java.awt.Choice();
+        genreLabel = new javax.swing.JLabel();
+        genreChoice = new java.awt.Choice();
+        genreAddButton = new javax.swing.JButton();
+        demographicLabel = new javax.swing.JLabel();
+        demographicChoice = new java.awt.Choice();
+        priceLabel = new javax.swing.JLabel();
+        priceText = new javax.swing.JTextField();
+        volumeLabel = new javax.swing.JLabel();
+        volumeChoice = new java.awt.Choice();
+        stockLabel = new javax.swing.JLabel();
+        stockText = new javax.swing.JTextField();
+        clearButton = new javax.swing.JButton();
+        mangaAddButton = new javax.swing.JButton();
+        modifyPanel = new javax.swing.JPanel();
+        removePanel = new javax.swing.JPanel();
+        listPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MANGA ARCHIVE");
 
-        jButton1.setText("Agregar Manga");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        mangaLabel.setText("Manga:");
+
+        mangaText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarManga(evt);
+                mangaTextActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Agregar Autor");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+        authorLabel.setText("Autor:");
+
+        countryLabel.setText("Pais:");
+
+        countryChoice.setPreferredSize(new java.awt.Dimension(28, 24));
+
+        genreLabel.setText("Generos:");
+
+        genreChoice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                genreChoiceFocusLost(evt);
             }
         });
 
-        jButton3.setText("Modificar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        genreAddButton.setText("+");
+        genreAddButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                genreAddButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Listar");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+        demographicLabel.setText("Demografia:");
+
+        demographicChoice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                demographicChoiceFocusLost(evt);
             }
         });
 
-        jButton5.setText("Salir");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        priceLabel.setText("Precio:");
+
+        priceText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5agregarManga(evt);
+                priceTextActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Conectar");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6agregarManga(evt);
+        volumeLabel.setText("Volumen:");
+
+        volumeChoice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                volumeChoiceFocusLost(evt);
             }
         });
 
-        jMenu4.setText("Buscar");
-        jMenuBar1.add(jMenu4);
+        stockLabel.setText("Stock:");
 
-        setJMenuBar(jMenuBar1);
+        clearButton.setText("Limpiar");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
+
+        mangaAddButton.setText("Agregar");
+        mangaAddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mangaAddButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout addPanelLayout = new javax.swing.GroupLayout(addPanel);
+        addPanel.setLayout(addPanelLayout);
+        addPanelLayout.setHorizontalGroup(
+            addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addPanelLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(addPanelLayout.createSequentialGroup()
+                        .addComponent(clearButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(mangaAddButton))
+                    .addGroup(addPanelLayout.createSequentialGroup()
+                        .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mangaLabel)
+                            .addComponent(authorLabel)
+                            .addComponent(countryLabel)
+                            .addComponent(genreLabel))
+                        .addGap(15, 15, 15)
+                        .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mangaText, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(authorText, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(countryChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(addPanelLayout.createSequentialGroup()
+                                .addComponent(genreChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(genreAddButton)))
+                        .addGap(15, 15, 15)
+                        .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(stockLabel)
+                            .addComponent(volumeLabel)
+                            .addComponent(priceLabel)
+                            .addComponent(demographicLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(stockText, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(volumeChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(demographicChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        addPanelLayout.setVerticalGroup(
+            addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addPanelLayout.createSequentialGroup()
+                .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(genreAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(addPanelLayout.createSequentialGroup()
+                            .addGap(30, 30, 30)
+                            .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(demographicLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(mangaLabel)
+                                    .addComponent(mangaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(26, 26, 26)
+                            .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(authorLabel)
+                                .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(authorText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(priceLabel)))
+                            .addGap(30, 30, 30)
+                            .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(countryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(countryChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(volumeLabel))
+                            .addGap(30, 30, 30)
+                            .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(genreLabel)
+                                    .addComponent(genreChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(stockLabel)))
+                        .addGroup(addPanelLayout.createSequentialGroup()
+                            .addGap(38, 38, 38)
+                            .addComponent(demographicChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(26, 26, 26)
+                            .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(30, 30, 30)
+                            .addComponent(volumeChoice, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(30, 30, 30)
+                            .addComponent(stockText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(50, 50, 50)
+                .addGroup(addPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(clearButton)
+                    .addComponent(mangaAddButton))
+                .addContainerGap(296, Short.MAX_VALUE))
+        );
+
+        tabs.addTab("Agregar", addPanel);
+
+        javax.swing.GroupLayout modifyPanelLayout = new javax.swing.GroupLayout(modifyPanel);
+        modifyPanel.setLayout(modifyPanelLayout);
+        modifyPanelLayout.setHorizontalGroup(
+            modifyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 798, Short.MAX_VALUE)
+        );
+        modifyPanelLayout.setVerticalGroup(
+            modifyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 574, Short.MAX_VALUE)
+        );
+
+        tabs.addTab("Modificar", modifyPanel);
+
+        javax.swing.GroupLayout removePanelLayout = new javax.swing.GroupLayout(removePanel);
+        removePanel.setLayout(removePanelLayout);
+        removePanelLayout.setHorizontalGroup(
+            removePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 798, Short.MAX_VALUE)
+        );
+        removePanelLayout.setVerticalGroup(
+            removePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 574, Short.MAX_VALUE)
+        );
+
+        tabs.addTab("Eliminar", removePanel);
+
+        javax.swing.GroupLayout listPanelLayout = new javax.swing.GroupLayout(listPanel);
+        listPanel.setLayout(listPanelLayout);
+        listPanelLayout.setHorizontalGroup(
+            listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 798, Short.MAX_VALUE)
+        );
+        listPanelLayout.setVerticalGroup(
+            listPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 574, Short.MAX_VALUE)
+        );
+
+        tabs.addTab("Listar", listPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton4)
-                        .addComponent(jButton3)
-                        .addComponent(jButton2)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addGap(40, 40, 40)))
-                .addContainerGap(210, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(239, Short.MAX_VALUE)
-                    .addComponent(jButton6)
-                    .addGap(83, 83, 83)))
+            .addComponent(tabs)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(jButton5)
-                .addContainerGap(48, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(208, Short.MAX_VALUE)
-                    .addComponent(jButton6)
-                    .addGap(46, 46, 46)))
+            .addComponent(tabs)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        AgregarAutor ventAddAutor=new AgregarAutor();
-        ventAddAutor.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void genreChoiceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_genreChoiceFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_genreChoiceFocusLost
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Modificar modificar = new Modificar();
-        modificar.setVisible(true);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void demographicChoiceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_demographicChoiceFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_demographicChoiceFocusLost
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        Listar listar = new Listar();
-        listar.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void priceTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_priceTextActionPerformed
 
-    private void agregarManga(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarManga
-        AgregarManga ventAddManga = new AgregarManga();
-        ventAddManga.setVisible(true);
-    }//GEN-LAST:event_agregarManga
+    private void volumeChoiceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_volumeChoiceFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_volumeChoiceFocusLost
 
-    private void jButton5agregarManga(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5agregarManga
-        JOptionPane.showMessageDialog(null, "Gracias por ocupar el sistema", "Salida", JOptionPane.INFORMATION_MESSAGE);
-        System.exit(0);
-    }//GEN-LAST:event_jButton5agregarManga
+    private void genreAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genreAddButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_genreAddButtonActionPerformed
 
-    private void jButton6agregarManga(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6agregarManga
-        Conexion mysql = new Conexion();
-        mysql.conectar();
-    }//GEN-LAST:event_jButton6agregarManga
+    private void mangaTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mangaTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mangaTextActionPerformed
+
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_clearButtonActionPerformed
+
+    private void mangaAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mangaAddButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mangaAddButtonActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -183,13 +319,29 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel addPanel;
+    private javax.swing.JLabel authorLabel;
+    private javax.swing.JTextField authorText;
+    private javax.swing.JButton clearButton;
+    private java.awt.Choice countryChoice;
+    private javax.swing.JLabel countryLabel;
+    private java.awt.Choice demographicChoice;
+    private javax.swing.JLabel demographicLabel;
+    private javax.swing.JButton genreAddButton;
+    private java.awt.Choice genreChoice;
+    private javax.swing.JLabel genreLabel;
+    private javax.swing.JPanel listPanel;
+    private javax.swing.JButton mangaAddButton;
+    private javax.swing.JLabel mangaLabel;
+    private javax.swing.JTextField mangaText;
+    private javax.swing.JPanel modifyPanel;
+    private javax.swing.JLabel priceLabel;
+    private javax.swing.JTextField priceText;
+    private javax.swing.JPanel removePanel;
+    private javax.swing.JLabel stockLabel;
+    private javax.swing.JTextField stockText;
+    private javax.swing.JTabbedPane tabs;
+    private java.awt.Choice volumeChoice;
+    private javax.swing.JLabel volumeLabel;
     // End of variables declaration//GEN-END:variables
 }
