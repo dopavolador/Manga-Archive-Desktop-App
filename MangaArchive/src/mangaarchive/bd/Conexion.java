@@ -21,9 +21,10 @@ public class Conexion implements Credenciales {
         try
         {
             Class.forName(DRIVER);
-            conectar=DriverManager.getConnection(URL,USUARIO,CLAVE);
+            conectar = DriverManager.getConnection(URL, USUARIO, CLAVE);
             JOptionPane.showMessageDialog(null, "Conexion exitosa", "Conexion", JOptionPane.INFORMATION_MESSAGE);
-        }catch(ClassNotFoundException | SQLException e)
+        }
+        catch(ClassNotFoundException | SQLException e)
         {
             JOptionPane.showMessageDialog(null, "Sin Conexion"+e, "Conexion", JOptionPane.ERROR_MESSAGE);
         }
