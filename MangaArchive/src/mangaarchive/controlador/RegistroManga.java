@@ -42,7 +42,7 @@ public class RegistroManga {
     }
     
     /*
-    Busca un manga por id,  retorna el usuario si no retorna un usuario con solo un dato "0"
+    Busca un manga por id,  retorna el manga, si no retorna un manga con solo un dato "0"
     */
     public Manga buscarPorId(int id){
         Manga manga=new Manga();        
