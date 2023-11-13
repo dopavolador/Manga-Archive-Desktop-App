@@ -13,7 +13,9 @@ public class Manga {
     private int id,precio,autorID,demografiaID;
     private String titulo;
     
-    public Manga(){}
+    public Manga(){
+        id=0;
+    }
     
     public Manga(int id, String titulo, int precio, int autorID, int demografiaID){
         this.id = id;

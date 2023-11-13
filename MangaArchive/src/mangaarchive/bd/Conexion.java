@@ -22,7 +22,7 @@ public class Conexion implements Credenciales {
         {
             Class.forName(DRIVER);
             conectar = DriverManager.getConnection(URL, USUARIO, CLAVE);
-            JOptionPane.showMessageDialog(null, "Conexion exitosa", "Conexion", JOptionPane.INFORMATION_MESSAGE);
+         //   JOptionPane.showMessageDialog(null, "Conexion exitosa", "Conexion", JOptionPane.INFORMATION_MESSAGE);
         }
         catch(ClassNotFoundException | SQLException e)
         {
