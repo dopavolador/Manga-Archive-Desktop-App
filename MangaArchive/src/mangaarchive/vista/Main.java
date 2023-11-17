@@ -12,10 +12,13 @@ public class Main extends javax.swing.JFrame {
 
     Manga manga = new Manga();
     RegistroManga registroManga = new RegistroManga();
+    RegistroAutor registroAutor = new RegistroAutor();
+    RegistroDemografia registroDemografia = new RegistroDemografia();
     
     public Main() {
         initComponents();
         this.setLocationRelativeTo(null); //CENTRA LA VENTANA
+        mostrarManga();
     }
 
     @SuppressWarnings("unchecked")
@@ -272,6 +275,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(rootPane, "id es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
         }
+        mostrarManga();
     }//GEN-LAST:event_mangaAddButtonActionPerformed
 
     private void txtxIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtxIdActionPerformed
@@ -366,7 +370,7 @@ public class Main extends javax.swing.JFrame {
 
     private void mostrarManga(){
         int id, precio, autor_id, demografia_id;
-        String titulo;
+        String titulo, nombreAutor, nombreDemografia;
         
         DefaultTableModel modelo = (DefaultTableModel) this.tblManga.getModel();
         modelo.setRowCount(0);
@@ -376,8 +380,10 @@ public class Main extends javax.swing.JFrame {
             titulo = tmp.getTitulo();
             precio = tmp.getPrecio();
             autor_id = tmp.getAutorID();
+            nombreAutor = registroAutor.buscarPorId(autor_id).getNombre();
             demografia_id = tmp.getDemografiaID();
-            modelo.addRow(new Object[]{id,titulo,precio,autor_id,demografia_id});
+            nombreDemografia = registroDemografia.buscarPorId(demografia_id).getNombre();
+            modelo.addRow(new Object[]{id,titulo,precio,nombreAutor,nombreDemografia});
         }
     }
 }

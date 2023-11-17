@@ -12,7 +12,9 @@ public class Demografia {
     private int id;
     private String nombre;
     
-    public Demografia(){}
+    public Demografia(){
+        id = 0;
+    }
 
     public Demografia(int id, String nombre) {
         this.id = id;

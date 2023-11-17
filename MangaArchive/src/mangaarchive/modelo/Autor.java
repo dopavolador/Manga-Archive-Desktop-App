@@ -13,7 +13,9 @@ public class Autor {
     private int id,nacionalidadID;
     private String nombre;
     
-    public Autor(){}
+    public Autor(){
+        id = 0;
+    }
     
     public Autor(int id, String nombre, int nacionalidadID){
         this.id = id;
