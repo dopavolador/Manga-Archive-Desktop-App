@@ -92,12 +92,32 @@ public class RegistroManga {
             }
             stmt.close();
             conectar.close();            
-       } catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error SQL - buscarPorId: "+ex.getMessage());
         } catch (Exception ex) {
             System.out.println("Error - buscarPorId: "+ex.getMessage());
         } 
         return listaManga;
     }   
+    
+    public boolean eliminarManga(int id){
+        try {
+	    Conexion conexion = new Conexion();
+            Connection conectar = conexion.conectar();
+            String query="DELETE FROM manga WHERE id=?";
+            PreparedStatement stmt = conectar.prepareStatement(query);        
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            stmt.close();
+            conectar.close();
+            return true;
+        } catch (SQLException ex) {
+            System.out.println("Error SQL - eliminarManga: "+ex.getMessage());
+            return false;
+        } catch (Exception ex) {
+            System.out.println("Error - eliminarManga: "+ex.getMessage());
+            return false;
+        }          
+    }
     
 }

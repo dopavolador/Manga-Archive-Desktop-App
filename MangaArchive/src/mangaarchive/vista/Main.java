@@ -144,7 +144,7 @@ public class Main extends javax.swing.JFrame {
         clearButton.setText("Eliminar");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButtonActionPerformed(evt);
+                btnEliminar(evt);
             }
         });
 
@@ -243,9 +243,19 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMangaActionPerformed
 
-    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_clearButtonActionPerformed
+    private void btnEliminar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminar
+        manga = registroManga.buscarPorId(Integer.parseInt(this.txtxId.getText()));
+        if(manga.getId()!=0){
+            if(registroManga.eliminarManga(Integer.parseInt(this.txtxId.getText()))){
+                JOptionPane.showMessageDialog(rootPane, "manga eliminado","Comprobacion de datos",JOptionPane.INFORMATION_MESSAGE);
+                mostrarManga();
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "No se eliminó manga de la BD", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE);
+            }
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Manga no existe", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
+        }
+    }//GEN-LAST:event_btnEliminar
 
     private void mangaAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mangaAddButtonActionPerformed
         if(!this.txtxId.getText().isBlank()){
