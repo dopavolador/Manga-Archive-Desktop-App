@@ -1,6 +1,10 @@
 
 package mangaarchive.vista;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -10,14 +14,22 @@ import mangaarchive.modelo.*;
 
 public class Main extends javax.swing.JFrame {
 
-    Manga manga = new Manga();
+    MangaDTO manga = new MangaDTO();
     RegistroManga registroManga = new RegistroManga();
     RegistroAutor registroAutor = new RegistroAutor();
     RegistroDemografia registroDemografia = new RegistroDemografia();
+    RegistroTipoGenero registroTipoGenero = new RegistroTipoGenero();
     
     public Main() {
         initComponents();
-        this.setLocationRelativeTo(null); //CENTRA LA VENTANA
+        setLocationRelativeTo(null); //CENTRA LA VENTANA
+        
+        
+        RellenarComboBox("nacionalidad", "pais", cboCountry);
+        cboCountry.setSelectedItem("Japón"); //Japón default
+        
+        RellenarComboBox("demografia", "nombre", cboDemo);
+        RellenarComboBox("tipo_genero", "nombre", cboGenre);
         mostrarManga();
     }
 
@@ -27,17 +39,22 @@ public class Main extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         mangaLabel = new javax.swing.JLabel();
-        txtManga = new javax.swing.JTextField();
+        txtAuthor = new javax.swing.JTextField();
         authorLabel = new javax.swing.JLabel();
-        countryLabel = new javax.swing.JLabel();
         demographicLabel = new javax.swing.JLabel();
         priceLabel = new javax.swing.JLabel();
-        txtPrecio = new javax.swing.JTextField();
+        txtPrice = new javax.swing.JTextField();
         mangaAddButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        txtxId = new javax.swing.JTextField();
-        cboAutor = new javax.swing.JComboBox<>();
-        cboDemografia1 = new javax.swing.JComboBox<>();
+        cboDemo = new javax.swing.JComboBox<>();
+        mangaLabel1 = new javax.swing.JLabel();
+        mangaLabel2 = new javax.swing.JLabel();
+        txtYear = new javax.swing.JTextField();
+        mangaLabel3 = new javax.swing.JLabel();
+        cboCountry = new javax.swing.JComboBox<>();
+        txtManga = new javax.swing.JTextField();
+        cboGenre = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblManga = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -57,31 +74,28 @@ public class Main extends javax.swing.JFrame {
         mangaLabel.setText("Manga:");
         jPanel1.add(mangaLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 59, -1, -1));
 
-        txtManga.addActionListener(new java.awt.event.ActionListener() {
+        txtAuthor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMangaActionPerformed(evt);
+                txtAuthorActionPerformed(evt);
             }
         });
-        jPanel1.add(txtManga, new org.netbeans.lib.awtextra.AbsoluteConstraints(89, 56, 157, -1));
+        jPanel1.add(txtAuthor, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 157, -1));
 
         authorLabel.setText("Autor:");
         jPanel1.add(authorLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(38, 102, -1, -1));
 
-        countryLabel.setText("id:");
-        jPanel1.add(countryLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 60, -1, -1));
-
         demographicLabel.setText("Demografia:");
-        jPanel1.add(demographicLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 142, -1, -1));
+        jPanel1.add(demographicLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, -1, -1));
 
         priceLabel.setText("Precio:");
-        jPanel1.add(priceLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 182, -1, -1));
+        jPanel1.add(priceLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, -1, -1));
 
-        txtPrecio.addActionListener(new java.awt.event.ActionListener() {
+        txtPrice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPrecioActionPerformed(evt);
+                txtPriceActionPerformed(evt);
             }
         });
-        jPanel1.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(89, 179, 157, -1));
+        jPanel1.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 157, -1));
 
         mangaAddButton.setText("Ingresar");
         mangaAddButton.addActionListener(new java.awt.event.ActionListener() {
@@ -95,28 +109,57 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setText("MANGA ARCHIVE");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 12, -1, -1));
 
-        txtxId.addActionListener(new java.awt.event.ActionListener() {
+        cboDemo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtxIdActionPerformed(evt);
+                cboDemoActionPerformed(evt);
             }
         });
-        jPanel1.add(txtxId, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 60, 157, -1));
+        jPanel1.add(cboDemo, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, 160, -1));
 
-        cboAutor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "100 (Tatsuki Fujimoto)", "101 (Naoshi Arakawa)" }));
-        cboAutor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboAutorActionPerformed(evt);
-            }
-        });
-        jPanel1.add(cboAutor, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 150, -1));
+        mangaLabel1.setText("Año:");
+        jPanel1.add(mangaLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, -1));
 
-        cboDemografia1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 (Shounen)", "2 (Seinen)", "3 (Shoujo)", "4 (Josei)", "5 (Kodomo)" }));
-        cboDemografia1.addActionListener(new java.awt.event.ActionListener() {
+        mangaLabel2.setText("País:");
+        jPanel1.add(mangaLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, -1, -1));
+
+        txtYear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboDemografia1ActionPerformed(evt);
+                txtYearActionPerformed(evt);
             }
         });
-        jPanel1.add(cboDemografia1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 150, -1));
+        jPanel1.add(txtYear, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 60, 157, -1));
+
+        mangaLabel3.setText("Genero:");
+        jPanel1.add(mangaLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 140, -1, -1));
+
+        cboCountry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboCountryActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cboCountry, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 100, 157, -1));
+
+        txtManga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMangaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtManga, new org.netbeans.lib.awtextra.AbsoluteConstraints(89, 56, 157, -1));
+
+        cboGenre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboGenreActionPerformed(evt);
+            }
+        });
+        jPanel1.add(cboGenre, new org.netbeans.lib.awtextra.AbsoluteConstraints(341, 137, 157, -1));
+
+        jButton1.setText("+");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 140, -1, 20));
 
         tblManga.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -235,15 +278,16 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
+    private void txtPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPriceActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPrecioActionPerformed
+    }//GEN-LAST:event_txtPriceActionPerformed
 
-    private void txtMangaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMangaActionPerformed
+    private void txtAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAuthorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtMangaActionPerformed
+    }//GEN-LAST:event_txtAuthorActionPerformed
 
     private void btnEliminar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminar
+        /*
         manga = registroManga.buscarPorId(Integer.parseInt(this.txtxId.getText()));
         if(manga.getId()!=0){
             if(registroManga.eliminarManga(Integer.parseInt(this.txtxId.getText()))){
@@ -255,42 +299,41 @@ public class Main extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(rootPane, "Manga no existe", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
         }
+        */
     }//GEN-LAST:event_btnEliminar
 
     private void mangaAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mangaAddButtonActionPerformed
-        if(!this.txtxId.getText().isBlank()){
-            if(!this.txtManga.getText().isBlank()){
-                if(!this.txtPrecio.getText().isBlank()){
-                    manga = registroManga.buscarPorId(Integer.parseInt(this.txtxId.getText()));
-                    if(manga.getId()==0){
-                        manga.setId(Integer.parseInt(this.txtxId.getText()));
-                        manga.setTitulo(this.txtManga.getText());
-                        manga.setPrecio(Integer.parseInt(this.txtPrecio.getText()));
-                        manga.setAutorID(Integer.parseInt(this.cboAutor.getSelectedItem().toString().substring(0,3)));
-                        manga.setDemografiaID(Integer.parseInt(this.cboDemografia1.getSelectedItem().toString().substring(0,1)));
-                        if(registroManga.addManga(manga)){
-                            JOptionPane.showMessageDialog(rootPane, "Manga agregado con exito!!!","Comprobacion de Datos",JOptionPane.INFORMATION_MESSAGE);
-                        }else{
-                            JOptionPane.showMessageDialog(rootPane, "No se agrego manga a la BD","Comprobacion de Datos",JOptionPane.ERROR_MESSAGE);
-                        }
-                    }else{
-                        JOptionPane.showMessageDialog(rootPane, "MANGA YA EXISTE!!!", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
+
+        if(!this.txtAuthor.getText().isBlank()){
+            if(!this.txtPrice.getText().isBlank()){
+                manga = registroManga.buscarPorId(Integer.parseInt(this.txtxId.getText()));
+                if(manga.getId()==0){
+                    manga.setId(Integer.parseInt(this.txtxId.getText()));
+                    manga.setTitulo(this.txtAuthor.getText());
+                    manga.setPrecio(Integer.parseInt(this.txtPrice.getText()));
+                    manga.setAutorID(this.cboAuthor.getSelectedItem());
+                    manga.setDemografiaID(Integer.parseInt(this.cboDemo.getSelectedItem().toString().substring(0,1)));
+                    if(registroManga.addManga(manga)){
+                        JOptionPane.showMessageDialog(rootPane, "Manga agregado con exito!!!","Comprobacion de Datos",JOptionPane.INFORMATION_MESSAGE);
                     }
-                }else{
-                    JOptionPane.showMessageDialog(rootPane, "Precio es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
+                    else{
+                        JOptionPane.showMessageDialog(rootPane, "No se agrego manga a la BD","Comprobacion de Datos",JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "Titulo es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
+                else
+                {
+                    JOptionPane.showMessageDialog(rootPane, "MANGA YA EXISTE!!!", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
+                }
             }
-        }else{
-            JOptionPane.showMessageDialog(rootPane, "id es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
+            else{
+                JOptionPane.showMessageDialog(rootPane, "Precio es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(rootPane, "Titulo es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
         }
         mostrarManga();
     }//GEN-LAST:event_mangaAddButtonActionPerformed
-
-    private void txtxIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtxIdActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtxIdActionPerformed
 
     private void clearButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton2ActionPerformed
         // TODO add your handling code here:
@@ -312,13 +355,29 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_clearButton5ActionPerformed
 
-    private void cboAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboAutorActionPerformed
+    private void cboDemoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDemoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cboAutorActionPerformed
+    }//GEN-LAST:event_cboDemoActionPerformed
 
-    private void cboDemografia1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDemografia1ActionPerformed
+    private void txtYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtYearActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cboDemografia1ActionPerformed
+    }//GEN-LAST:event_txtYearActionPerformed
+
+    private void cboCountryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCountryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboCountryActionPerformed
+
+    private void txtMangaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMangaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMangaActionPerformed
+
+    private void cboGenreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboGenreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboGenreActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -355,15 +414,16 @@ public class Main extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
-    private javax.swing.JComboBox<String> cboAutor;
-    private javax.swing.JComboBox<String> cboDemografia1;
+    private javax.swing.JComboBox<String> cboCountry;
+    private javax.swing.JComboBox<String> cboDemo;
+    private javax.swing.JComboBox<String> cboGenre;
     private javax.swing.JButton clearButton;
     private javax.swing.JButton clearButton2;
     private javax.swing.JButton clearButton3;
     private javax.swing.JButton clearButton4;
     private javax.swing.JButton clearButton5;
-    private javax.swing.JLabel countryLabel;
     private javax.swing.JLabel demographicLabel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -371,11 +431,15 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JButton mangaAddButton;
     private javax.swing.JLabel mangaLabel;
+    private javax.swing.JLabel mangaLabel1;
+    private javax.swing.JLabel mangaLabel2;
+    private javax.swing.JLabel mangaLabel3;
     private javax.swing.JLabel priceLabel;
     private javax.swing.JTable tblManga;
+    private javax.swing.JTextField txtAuthor;
     private javax.swing.JTextField txtManga;
-    private javax.swing.JTextField txtPrecio;
-    private javax.swing.JTextField txtxId;
+    private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtYear;
     // End of variables declaration//GEN-END:variables
 
     private void mostrarManga(){
@@ -384,8 +448,8 @@ public class Main extends javax.swing.JFrame {
         
         DefaultTableModel modelo = (DefaultTableModel) this.tblManga.getModel();
         modelo.setRowCount(0);
-        ArrayList<Manga> lista = registroManga.listarManga();
-        for (Manga tmp : lista) {
+        ArrayList<MangaDTO> lista = registroManga.listarManga();
+        for (MangaDTO tmp : lista) {
             id = tmp.getId();
             titulo = tmp.getTitulo();
             precio = tmp.getPrecio();
@@ -394,6 +458,25 @@ public class Main extends javax.swing.JFrame {
             demografia_id = tmp.getDemografiaID();
             nombreDemografia = registroDemografia.buscarPorId(demografia_id).getNombre();
             modelo.addRow(new Object[]{id,titulo,precio,nombreAutor,nombreDemografia});
+        }
+    }
+    
+    private void RellenarComboBox(String tabla, String valor, JComboBox combo)
+    {
+        String query = "SELECT " + valor + " FROM " + tabla;
+        
+        try (Connection conectar = new Conexion().conectar();
+             PreparedStatement stmt = conectar.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                combo.addItem(rs.getString(valor));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error SQL: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 }

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-11-2023 a las 02:18:16
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 19-11-2023 a las 20:36:56
+-- Versión del servidor: 10.4.21-MariaDB
+-- Versión de PHP: 8.0.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `equipo_2db`
 --
-DROP DATABASE IF EXISTS `equipo_2db`;
 CREATE DATABASE IF NOT EXISTS `equipo_2db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `equipo_2db`;
 
@@ -30,20 +29,11 @@ USE `equipo_2db`;
 -- Estructura de tabla para la tabla `autor`
 --
 
-DROP TABLE IF EXISTS `autor`;
 CREATE TABLE `autor` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `nacionalidad_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `autor`
---
-
-INSERT INTO `autor` (`id`, `nombre`, `nacionalidad_id`) VALUES
-(100, 'Tatsuki Fujimoto', 1),
-(101, 'Naoshi Arakawa', 2);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -51,11 +41,10 @@ INSERT INTO `autor` (`id`, `nombre`, `nacionalidad_id`) VALUES
 -- Estructura de tabla para la tabla `demografia`
 --
 
-DROP TABLE IF EXISTS `demografia`;
 CREATE TABLE `demografia` (
   `id` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `demografia`
@@ -74,11 +63,10 @@ INSERT INTO `demografia` (`id`, `nombre`) VALUES
 -- Estructura de tabla para la tabla `genero`
 --
 
-DROP TABLE IF EXISTS `genero`;
 CREATE TABLE `genero` (
   `manga_id` int(11) NOT NULL,
   `tipo_genero_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -86,14 +74,14 @@ CREATE TABLE `genero` (
 -- Estructura de tabla para la tabla `manga`
 --
 
-DROP TABLE IF EXISTS `manga`;
 CREATE TABLE `manga` (
   `id` int(11) NOT NULL,
   `titulo` varchar(100) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
+  `anio` int(4) NOT NULL,
   `autor_id` int(11) NOT NULL,
   `demografia_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -101,13 +89,12 @@ CREATE TABLE `manga` (
 -- Estructura de tabla para la tabla `nacionalidad`
 --
 
-DROP TABLE IF EXISTS `nacionalidad`;
 CREATE TABLE `nacionalidad` (
   `id` int(11) NOT NULL,
   `iso` char(3) NOT NULL,
   `pais` varchar(80) NOT NULL,
   `gentilicio` varchar(80) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `nacionalidad`
@@ -322,11 +309,10 @@ INSERT INTO `nacionalidad` (`id`, `iso`, `pais`, `gentilicio`) VALUES
 -- Estructura de tabla para la tabla `tipo_genero`
 --
 
-DROP TABLE IF EXISTS `tipo_genero`;
 CREATE TABLE `tipo_genero` (
   `id` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `tipo_genero`
@@ -375,12 +361,11 @@ INSERT INTO `tipo_genero` (`id`, `nombre`) VALUES
 -- Estructura de tabla para la tabla `tomo`
 --
 
-DROP TABLE IF EXISTS `tomo`;
 CREATE TABLE `tomo` (
   `manga_id` int(11) NOT NULL,
   `tomo_num` int(11) NOT NULL,
   `stock` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Índices para tablas volcadas
@@ -435,6 +420,12 @@ ALTER TABLE `tomo`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `manga`
+--
+ALTER TABLE `manga`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `nacionalidad`
