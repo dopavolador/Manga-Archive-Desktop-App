@@ -4,25 +4,25 @@
  */
 package mangaarchive.modelo;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Alvaro Mora y Bastian Heresmann
  */
 public class MangaDTO {
     
-    private int id,precio,autorID,demografiaID;
+    private int id, precio, autorID, demografiaID;
     private String titulo;
-    
-    public MangaDTO(){
-        id=0;
-    }
-    
-    public MangaDTO(int id, String titulo, int precio, int autorID, int demografiaID){
+    ArrayList<Integer> generos;
+
+    public MangaDTO(int id, int precio, int autorID, int demografiaID, String titulo, ArrayList<Integer> generos) {
         this.id = id;
-        this.titulo = titulo;
         this.precio = precio;
         this.autorID = autorID;
         this.demografiaID = demografiaID;
+        this.titulo = titulo;
+        this.generos = generos;
     }
 
     public int getId() {
@@ -65,6 +65,14 @@ public class MangaDTO {
         this.titulo = titulo;
     }
 
+    public ArrayList<Integer> getGeneros() {
+        return generos;
+    }
+
+    public void setGeneros(ArrayList<Integer> generos) {
+        this.generos = generos;
+    }
+    
     @Override
     public String toString() {
         return "Manga{" + "id=" + id + ", precio=" + precio + ", autorID=" + autorID + ", demografiaID=" + demografiaID + ", titulo=" + titulo + '}';

@@ -4,10 +4,19 @@
  */
 package mangaarchive.controlador;
 
+import java.util.ArrayList;
+import mangaarchive.modelo.*;
+
 /**
  *
  * @author Emilia
  */
 public class Registro {
+    
+    
+    public boolean registrarMangaBD(int precio, int autorID, int demografiaID, String titulo, ArrayList<Integer> generos){
+       return new MangaDAO(precio, autorID, demografiaID, titulo, generos).registrarMangaBD();
+   }   
+    
     
 }
