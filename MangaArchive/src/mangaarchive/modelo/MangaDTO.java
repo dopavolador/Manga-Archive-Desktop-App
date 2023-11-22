@@ -12,16 +12,17 @@ import java.util.ArrayList;
  */
 public class MangaDTO {
     
-    private int id, precio, autorID, demografiaID;
+    private int id, precio, autorID, demografiaID,anio;
     private String titulo;
     ArrayList<Integer> generos;
 
-    public MangaDTO(int id, int precio, int autorID, int demografiaID, String titulo, ArrayList<Integer> generos) {
+    public MangaDTO(int id, String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos){
         this.id = id;
+        this.titulo = titulo;
         this.precio = precio;
+        this.anio = anio;
         this.autorID = autorID;
         this.demografiaID = demografiaID;
-        this.titulo = titulo;
         this.generos = generos;
     }
 
@@ -71,6 +72,14 @@ public class MangaDTO {
 
     public void setGeneros(ArrayList<Integer> generos) {
         this.generos = generos;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
     }
     
     @Override

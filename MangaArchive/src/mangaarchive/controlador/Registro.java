@@ -13,9 +13,13 @@ import mangaarchive.modelo.*;
  */
 public class Registro {
     
+ /*   public boolean registrarAutorBD(String nombre, int nacionalidadID){
+        
+    }*/
     
-    public boolean registrarMangaBD(int precio, int autorID, int demografiaID, String titulo, ArrayList<Integer> generos){
-       return new MangaDAO(precio, autorID, demografiaID, titulo, generos).registrarMangaBD();
+    public boolean registrarMangaBD(String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos){
+        MangaDAO manga = new MangaDAO(titulo,precio,anio,autorID,demografiaID,generos);
+        return manga.registrarMangaBD();
    }   
     
     

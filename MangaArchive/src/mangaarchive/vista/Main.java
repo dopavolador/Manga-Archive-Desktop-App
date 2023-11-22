@@ -1,6 +1,7 @@
 
 package mangaarchive.vista;
 
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,11 +15,11 @@ import mangaarchive.modelo.*;
 
 public class Main extends javax.swing.JFrame {
 
-    MangaDTO manga = new MangaDTO();
-    RegistroManga registroManga = new RegistroManga();
-    RegistroAutor registroAutor = new RegistroAutor();
-    RegistroDemografia registroDemografia = new RegistroDemografia();
-    RegistroTipoGenero registroTipoGenero = new RegistroTipoGenero();
+    MangaDAO manga = new MangaDAO();
+    AutorDAO autor = new AutorDAO();
+    DemografiaDAO demografia = new DemografiaDAO();
+    ArrayList<Integer> generos = new ArrayList<Integer>();
+    Registro registro = new Registro();
     
     public Main() {
         initComponents();
@@ -30,7 +31,7 @@ public class Main extends javax.swing.JFrame {
         
         RellenarComboBox("demografia", "nombre", cboDemo);
         RellenarComboBox("tipo_genero", "nombre", cboGenre);
-        mostrarManga();
+       // mostrarManga();
     }
 
     @SuppressWarnings("unchecked")
@@ -44,7 +45,7 @@ public class Main extends javax.swing.JFrame {
         demographicLabel = new javax.swing.JLabel();
         priceLabel = new javax.swing.JLabel();
         txtPrice = new javax.swing.JTextField();
-        mangaAddButton = new javax.swing.JButton();
+        BTNadd = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         cboDemo = new javax.swing.JComboBox<>();
         mangaLabel1 = new javax.swing.JLabel();
@@ -54,16 +55,16 @@ public class Main extends javax.swing.JFrame {
         cboCountry = new javax.swing.JComboBox<>();
         txtManga = new javax.swing.JTextField();
         cboGenre = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnGeneroAdd = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblManga = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        clearButton2 = new javax.swing.JButton();
-        clearButton = new javax.swing.JButton();
-        clearButton3 = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
-        clearButton4 = new javax.swing.JButton();
-        clearButton5 = new javax.swing.JButton();
+        btnVerTomo = new javax.swing.JButton();
+        btnFiltro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MANGA ARCHIVE");
@@ -97,13 +98,13 @@ public class Main extends javax.swing.JFrame {
         });
         jPanel1.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 157, -1));
 
-        mangaAddButton.setText("Ingresar");
-        mangaAddButton.addActionListener(new java.awt.event.ActionListener() {
+        BTNadd.setText("Ingresar");
+        BTNadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mangaAddButtonActionPerformed(evt);
+                BTNaddActionPerformed(evt);
             }
         });
-        jPanel1.add(mangaAddButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 170, 80, -1));
+        jPanel1.add(BTNadd, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 170, 80, -1));
 
         jLabel1.setFont(new java.awt.Font("Cascadia Code", 0, 24)); // NOI18N
         jLabel1.setText("MANGA ARCHIVE");
@@ -153,48 +154,52 @@ public class Main extends javax.swing.JFrame {
         });
         jPanel1.add(cboGenre, new org.netbeans.lib.awtextra.AbsoluteConstraints(341, 137, 157, -1));
 
-        jButton1.setText("+");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnGeneroAdd.setText("+");
+        btnGeneroAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnGeneroAddActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 140, -1, 20));
+        jPanel1.add(btnGeneroAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 140, -1, 20));
 
         tblManga.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Id", "Nombre", "Precio", "Autor", "Demografia"
+                "TITULO", "PRECIO", "AÑO", "AUTOR", "DEMOGRAFIA"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblManga);
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 255));
 
-        clearButton2.setText("Modificar");
-        clearButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButton2ActionPerformed(evt);
+                btnModificarActionPerformed(evt);
             }
         });
 
-        clearButton.setText("Eliminar");
-        clearButton.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminar(evt);
             }
         });
 
-        clearButton3.setText("Buscar");
-        clearButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButton3ActionPerformed(evt);
+                btnBuscarActionPerformed(evt);
             }
         });
 
@@ -204,17 +209,17 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        clearButton4.setText("Ver tomos");
-        clearButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnVerTomo.setText("Ver tomos");
+        btnVerTomo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButton4ActionPerformed(evt);
+                btnVerTomoActionPerformed(evt);
             }
         });
 
-        clearButton5.setText("Filtros");
-        clearButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnFiltro.setText("Filtros");
+        btnFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButton5ActionPerformed(evt);
+                btnFiltroActionPerformed(evt);
             }
         });
 
@@ -224,17 +229,17 @@ public class Main extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(clearButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnVerTomo, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(clearButton2)
+                .addComponent(btnModificar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(clearButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(clearButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
         jPanel2Layout.setVerticalGroup(
@@ -242,12 +247,12 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(clearButton2)
-                    .addComponent(clearButton)
-                    .addComponent(clearButton3)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnBuscar)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clearButton4)
-                    .addComponent(clearButton5))
+                    .addComponent(btnVerTomo)
+                    .addComponent(btnFiltro))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -302,58 +307,53 @@ public class Main extends javax.swing.JFrame {
         */
     }//GEN-LAST:event_btnEliminar
 
-    private void mangaAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mangaAddButtonActionPerformed
-
-        if(!this.txtAuthor.getText().isBlank()){
-            if(!this.txtPrice.getText().isBlank()){
-                manga = registroManga.buscarPorId(Integer.parseInt(this.txtxId.getText()));
-                if(manga.getId()==0){
-                    manga.setId(Integer.parseInt(this.txtxId.getText()));
-                    manga.setTitulo(this.txtAuthor.getText());
-                    manga.setPrecio(Integer.parseInt(this.txtPrice.getText()));
-                    manga.setAutorID(this.cboAuthor.getSelectedItem());
-                    manga.setDemografiaID(Integer.parseInt(this.cboDemo.getSelectedItem().toString().substring(0,1)));
-                    if(registroManga.addManga(manga)){
-                        JOptionPane.showMessageDialog(rootPane, "Manga agregado con exito!!!","Comprobacion de Datos",JOptionPane.INFORMATION_MESSAGE);
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(rootPane, "No se agrego manga a la BD","Comprobacion de Datos",JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(rootPane, "MANGA YA EXISTE!!!", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
-                }
-            }
-            else{
-                JOptionPane.showMessageDialog(rootPane, "Precio es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
-            }
-        }
-        else{
-            JOptionPane.showMessageDialog(rootPane, "Titulo es obligatorio", "Comprobación de Datos", JOptionPane.ERROR_MESSAGE); 
-        }
+    private void BTNaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNaddActionPerformed
+        if(!this.txtManga.getText().isBlank()){
+            if(!this.txtAuthor.getText().isBlank()){
+                if(!this.txtPrice.getText().isBlank()){
+                    if(!this.txtYear.getText().isBlank()){
+                        manga.setTitulo(this.txtManga.getText().toString());
+                        manga.setPrecio(Integer.parseInt(this.txtPrice.getText().toString()));
+                        manga.setAnio(Integer.parseInt(this.txtYear.getText().toString()));
+                        manga.setAutorID(autor.obtenerAutorPorNombreBD(this.txtAuthor.getText().toString()).getId());
+                        manga.setDemografiaID(this.cboDemo.getSelectedIndex());
+                        this.btnGeneroAddActionPerformed(evt);
+                        manga.setGeneros(generos);
+                        // Tienes que hacer el registro en sistema
+                        if(registro.registrarMangaBD(manga.getTitulo(), manga.getPrecio(), manga.getAnio(), manga.getAutorID(), manga.getDemografiaID(), manga.getGeneros())){
+                            JOptionPane.showMessageDialog(rootPane, "Manga agregado con exito!!!","Comprobacion de Datos",JOptionPane.INFORMATION_MESSAGE);
+                        }else
+                            JOptionPane.showMessageDialog(rootPane, "No se agrego manga a la BD","Comprobacion de Datos",JOptionPane.ERROR_MESSAGE);
+                    }else
+                        JOptionPane.showMessageDialog(rootPane, "Año es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
+                }else
+                    JOptionPane.showMessageDialog(rootPane, "Precio es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
+            }else
+                JOptionPane.showMessageDialog(rootPane, "Autor es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
+        }else
+            JOptionPane.showMessageDialog(rootPane, "Titulo es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
         mostrarManga();
-    }//GEN-LAST:event_mangaAddButtonActionPerformed
+    }//GEN-LAST:event_BTNaddActionPerformed
 
-    private void clearButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton2ActionPerformed
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_clearButton2ActionPerformed
+    }//GEN-LAST:event_btnModificarActionPerformed
 
-    private void clearButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton3ActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_clearButton3ActionPerformed
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void clearButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton4ActionPerformed
+    private void btnVerTomoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTomoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_clearButton4ActionPerformed
+    }//GEN-LAST:event_btnVerTomoActionPerformed
 
-    private void clearButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton5ActionPerformed
+    private void btnFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_clearButton5ActionPerformed
+    }//GEN-LAST:event_btnFiltroActionPerformed
 
     private void cboDemoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDemoActionPerformed
         // TODO add your handling code here:
@@ -375,9 +375,11 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cboGenreActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnGeneroAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneroAddActionPerformed
+
+        generos.add(this.cboGenre.getSelectedIndex());
+        
+    }//GEN-LAST:event_btnGeneroAddActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -413,23 +415,23 @@ public class Main extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BTNadd;
     private javax.swing.JLabel authorLabel;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnFiltro;
+    private javax.swing.JButton btnGeneroAdd;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnVerTomo;
     private javax.swing.JComboBox<String> cboCountry;
     private javax.swing.JComboBox<String> cboDemo;
     private javax.swing.JComboBox<String> cboGenre;
-    private javax.swing.JButton clearButton;
-    private javax.swing.JButton clearButton2;
-    private javax.swing.JButton clearButton3;
-    private javax.swing.JButton clearButton4;
-    private javax.swing.JButton clearButton5;
     private javax.swing.JLabel demographicLabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JButton mangaAddButton;
     private javax.swing.JLabel mangaLabel;
     private javax.swing.JLabel mangaLabel1;
     private javax.swing.JLabel mangaLabel2;
@@ -443,6 +445,23 @@ public class Main extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void mostrarManga(){
+        String titulo, nombreAutor, nombreDemografia;
+        int precio, anio;
+        
+        DefaultTableModel modelo = (DefaultTableModel) this.tblManga.getModel();
+        modelo.setRowCount(0);
+        ArrayList<MangaDTO> lista = manga.obtenerListaManga();
+        for (MangaDTO mangaTemp : lista) {
+            titulo = mangaTemp.getTitulo();
+            precio = mangaTemp.getPrecio();
+            anio = mangaTemp.getAnio();
+            nombreAutor = autor.obtenerAutorPorIDBD(mangaTemp.getAutorID()).getNombre();
+            nombreDemografia = demografia.obtenerDemografiaPorIDBD(mangaTemp.getDemografiaID()).getNombre();
+            modelo.addRow(new Object[]{titulo,precio,anio,nombreAutor,nombreDemografia});
+        }
+    }
+    
+   /* private void mostrarManga(){
         int id, precio, autor_id, demografia_id;
         String titulo, nombreAutor, nombreDemografia;
         
@@ -459,7 +478,7 @@ public class Main extends javax.swing.JFrame {
             nombreDemografia = registroDemografia.buscarPorId(demografia_id).getNombre();
             modelo.addRow(new Object[]{id,titulo,precio,nombreAutor,nombreDemografia});
         }
-    }
+    }*/
     
     private void RellenarComboBox(String tabla, String valor, JComboBox combo)
     {
@@ -476,6 +495,24 @@ public class Main extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println("Error SQL: " + ex.getMessage());
         } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }
+    
+    // Esta a medias
+    private void autoCompletar(){
+        try{
+            TextAutoCompleter textoAutoCompleto = new TextAutoCompleter(this.txtAuthor);
+            textoAutoCompleto.setMode(0);
+            textoAutoCompleto.setCaseSensitive(false);
+            ArrayList<AutorDTO> listaAutor = autor.obtenerListaAutor();
+            String completar;
+            for(Iterator iterator = listaAutor.iterator();iterator.hasNext();){
+                AutorDTO autor = (AutorDTO) iterator.next();
+                completar = autor.getNombre();
+                textoAutoCompleto.addItem(completar);
+            }
+        } catch (Exception ex){
             System.out.println("Error: " + ex.getMessage());
         }
     }

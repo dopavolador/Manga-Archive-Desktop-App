@@ -57,10 +57,41 @@ public class DemografiaDAO {
             stmt.close();
             conectar.close();            
        } catch (SQLException ex) {
-            System.out.println("Error SQL - buscarPorId: "+ex.getMessage());
+            System.out.println("Error SQL - obtenerListaDemografia: "+ex.getMessage());
         } catch (Exception ex) {
-            System.out.println("Error - buscarPorId: "+ex.getMessage());
+            System.out.println("Error - obtenerListaDemografia: "+ex.getMessage());
         } 
         return listaDemografia;
     } 
+    
+    public DemografiaDTO obtenerDemografiaPorIDBD(int id){
+        try {
+            // Establecer la conexión a la base de datos
+            Conexion conexion = new Conexion();
+            Connection conectar = conexion.conectar();
+
+            // Obtener información principal de Demografia
+            PreparedStatement stmt = conectar.prepareStatement("SELECT * FROM demografia WHERE id = " + id);           
+            ResultSet rs = stmt.executeQuery();
+
+            // Procesar los resultados de la consulta principal
+            while (rs.next()) {
+                setId(rs.getInt("id"));
+                setNombre(rs.getString("nombre"));
+            }
+
+            // Cerrar recursos de la base de datos
+            stmt.close();
+            conectar.close();   
+        } catch (SQLException ex) {
+            // Manejar errores de SQL
+            System.out.println("Error SQL - obtenerDemografiaPorIDBD: "+ex.getMessage());
+        } catch (Exception ex) {
+            // Manejar errores generales
+            System.out.println("Error - obtenerDemografiaPorIDBD: "+ex.getMessage());
+        } 
+        // Devolver un objeto DemografiaDTO con la información obtenida
+        return new DemografiaDTO(this.getId(),this.getNombre());
+    }  
+    
 }

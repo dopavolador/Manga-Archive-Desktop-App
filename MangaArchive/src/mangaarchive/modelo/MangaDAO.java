@@ -14,22 +14,21 @@ import mangaarchive.bd.Conexion;
  */
 public class MangaDAO {
     
-    private int id, precio, autorID, demografiaID;
+    private int id, precio, autorID, demografiaID, anio;
     private String titulo;
     private ArrayList<Integer> generos;
 
     public MangaDAO() {
     }
 
-    public MangaDAO(int precio, int autorID, int demografiaID, String titulo, ArrayList<Integer> generos) {
+    public MangaDAO(String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos) {
         this.precio = precio;
         this.autorID = autorID;
         this.demografiaID = demografiaID;
         this.titulo = titulo;
         this.generos = generos;
+        this.anio = anio;
     }
-
-    
 
     public int getId() {
         return id;
@@ -79,7 +78,13 @@ public class MangaDAO {
         this.generos = generos;
     }
 
-    
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
+    }
     
     public boolean registrarMangaBD() {
         try {
@@ -210,11 +215,8 @@ public class MangaDAO {
             System.out.println("Error - obtenerMangaPorIDBD: "+ex.getMessage());
         } 
         // Devolver un objeto MangaDTO con la información obtenida
-        return new MangaDTO(this.getId(), this.getPrecio(), this.getAutorID(), this.getDemografiaID(), this.getTitulo(), this.getGeneros());
+        return new MangaDTO(this.id, this.titulo, this.precio, this.anio, this.autorID, this.demografiaID, this.generos);
     }   
-
-    
-    
     
     // Método para eliminar un manga y sus registros asociados por su ID desde la base de datos
     public boolean eliminarManga(int id){
@@ -251,6 +253,5 @@ public class MangaDAO {
             return false;
         }          
     }
-
     
 }
