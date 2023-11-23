@@ -74,6 +74,30 @@ public class AutorDAO {
         return listaAutor;
     } 
     
+    public String[] obtenerListaNombreAutor(){
+        String[] listaAutor= new String[5000];
+        try {
+            int i = 0;
+	    Conexion conexion = new Conexion();
+            Connection conectar = conexion.conectar();
+            String query="SELECT nombre FROM autor Order by id";
+            PreparedStatement stmt = conectar.prepareStatement(query);           
+            ResultSet rs=stmt.executeQuery();
+            while (rs.next()) {
+                setNombre(rs.getString("nombre"));
+                listaAutor[i]=this.getNombre();
+                i++;
+            }
+            stmt.close();
+            conectar.close();            
+       } catch (SQLException ex) {
+            System.out.println("Error SQL - obtenerListaNombreAutor: "+ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Error - obtenerListaNombreAutor: "+ex.getMessage());
+        } 
+        return listaAutor;
+    } 
+    
     public boolean registrarAutorBD() {
         try {
             Conexion conexion = new Conexion();

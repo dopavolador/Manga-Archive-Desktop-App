@@ -1,7 +1,6 @@
 
 package mangaarchive.vista;
 
-import com.mxrck.autocompleter.TextAutoCompleter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +11,8 @@ import javax.swing.table.*;
 import mangaarchive.bd.*;
 import mangaarchive.controlador.*;
 import mangaarchive.modelo.*;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
 public class Main extends javax.swing.JFrame {
 
@@ -25,13 +26,14 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null); //CENTRA LA VENTANA
         
+        autoCompletar();
         
         RellenarComboBox("nacionalidad", "pais", cboCountry);
         cboCountry.setSelectedItem("Japón"); //Japón default
         
         RellenarComboBox("demografia", "nombre", cboDemo);
         RellenarComboBox("tipo_genero", "nombre", cboGenre);
-       // mostrarManga();
+        mostrarManga();
     }
 
     @SuppressWarnings("unchecked")
@@ -461,25 +463,6 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
-   /* private void mostrarManga(){
-        int id, precio, autor_id, demografia_id;
-        String titulo, nombreAutor, nombreDemografia;
-        
-        DefaultTableModel modelo = (DefaultTableModel) this.tblManga.getModel();
-        modelo.setRowCount(0);
-        ArrayList<MangaDTO> lista = registroManga.listarManga();
-        for (MangaDTO tmp : lista) {
-            id = tmp.getId();
-            titulo = tmp.getTitulo();
-            precio = tmp.getPrecio();
-            autor_id = tmp.getAutorID();
-            nombreAutor = registroAutor.buscarPorId(autor_id).getNombre();
-            demografia_id = tmp.getDemografiaID();
-            nombreDemografia = registroDemografia.buscarPorId(demografia_id).getNombre();
-            modelo.addRow(new Object[]{id,titulo,precio,nombreAutor,nombreDemografia});
-        }
-    }*/
-    
     private void RellenarComboBox(String tabla, String valor, JComboBox combo)
     {
         String query = "SELECT " + valor + " FROM " + tabla;
@@ -502,16 +485,8 @@ public class Main extends javax.swing.JFrame {
     // Esta a medias
     private void autoCompletar(){
         try{
-            TextAutoCompleter textoAutoCompleto = new TextAutoCompleter(this.txtAuthor);
-            textoAutoCompleto.setMode(0);
-            textoAutoCompleto.setCaseSensitive(false);
-            ArrayList<AutorDTO> listaAutor = autor.obtenerListaAutor();
-            String completar;
-            for(Iterator iterator = listaAutor.iterator();iterator.hasNext();){
-                AutorDTO autor = (AutorDTO) iterator.next();
-                completar = autor.getNombre();
-                textoAutoCompleto.addItem(completar);
-            }
+            JList listaSugerencias = new JList(autor.obtenerListaNombreAutor());
+            AutoCompleteDecorator.decorate(listaSugerencias,this.txtAuthor,ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         } catch (Exception ex){
             System.out.println("Error: " + ex.getMessage());
         }

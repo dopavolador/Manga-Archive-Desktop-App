@@ -93,13 +93,14 @@ public class MangaDAO {
 
             // Crear un PreparedStatement con la opción RETURN_GENERATED_KEYS
             PreparedStatement stmt = conectar.prepareStatement(
-                    "INSERT INTO manga (titulo, precio, autor_id, demografia_id) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO manga (titulo, precio, anio, autor_id, demografia_id) VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, this.getTitulo());
             stmt.setInt(2, this.getPrecio());
-            stmt.setInt(3, this.getAutorID());
-            stmt.setInt(4, this.getDemografiaID());
+            stmt.setInt(3, this.getAnio());
+            stmt.setInt(4, this.getAutorID());
+            stmt.setInt(5, this.getDemografiaID());
 
             // Ejecutar la inserción
             stmt.executeUpdate();
@@ -199,7 +200,7 @@ public class MangaDAO {
             }
 
             // Obtener información sobre los géneros del manga
-            rs = stmt.executeQuery("SELECT tipo_manga_id FROM genero WHERE manga_id = " + id);
+            rs = stmt.executeQuery("SELECT tipo_genero_id FROM genero WHERE manga_id = " + id);
             while (rs.next()) {
                 getGeneros().add(rs.getInt(1));
             }
