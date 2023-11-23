@@ -144,17 +144,21 @@ public class AutorDAO {
     }
     
     public AutorDTO obtenerAutorPorNombreBD(String nombre){
+        AutorDTO autor = new AutorDTO();
         try{
+            
             Conexion conexion = new Conexion();
             Connection conectar =  conexion.conectar();
             
-            PreparedStatement stmt = conectar.prepareStatement("SELECT * FROM autor WHERE nombre = " + nombre);
+            PreparedStatement stmt = conectar.prepareStatement("SELECT * FROM autor WHERE nombre = ?");
+            stmt.setString(1, nombre);
+            
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
-                setId(rs.getInt("id"));
-                setNombre(rs.getString("nombre"));
-                setNacionalidadID(rs.getInt("nacionalidad_id"));
+                autor.setId(rs.getInt("id"));
+                autor.setNombre(nombre);
+                autor.setNacionalidadID(rs.getInt("nacionalidad_id"));
             }
             
             stmt.close();
@@ -164,7 +168,7 @@ public class AutorDAO {
         } catch (Exception ex){
             System.out.println("Error - obtenerAutorPorNombreBD: "+ex.getMessage());
         }
-        return new AutorDTO(this.getId(),this.getNombre(),this.getNacionalidadID());
+        return autor;
     }
     
     public AutorDTO obtenerAutorPorIDBD(int id){

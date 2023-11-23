@@ -314,10 +314,10 @@ public class Main extends javax.swing.JFrame {
             if(!this.txtAuthor.getText().isBlank()){
                 if(!this.txtPrice.getText().isBlank()){
                     if(!this.txtYear.getText().isBlank()){
-                        manga.setTitulo(this.txtManga.getText().toString());
-                        manga.setPrecio(Integer.parseInt(this.txtPrice.getText().toString()));
-                        manga.setAnio(Integer.parseInt(this.txtYear.getText().toString()));
-                        manga.setAutorID(autor.obtenerAutorPorNombreBD(this.txtAuthor.getText().toString()).getId());
+                        manga.setTitulo(this.txtManga.getText());
+                        manga.setPrecio(Integer.parseInt(this.txtPrice.getText()));
+                        manga.setAnio(Integer.parseInt(this.txtYear.getText()));
+                        manga.setAutorID(autor.obtenerAutorPorNombreBD(this.txtAuthor.getText()).getId());
                         manga.setDemografiaID(this.cboDemo.getSelectedIndex());
                         this.btnGeneroAddActionPerformed(evt);
                         manga.setGeneros(generos);

@@ -13,6 +13,8 @@ public class AutorDTO {
     private int id, nacionalidadID;
     private String nombre;
       
+    public AutorDTO(){}
+    
     public AutorDTO(int id, String nombre, int nacionalidadID){
         this.id = id;
         this.nombre = nombre;
