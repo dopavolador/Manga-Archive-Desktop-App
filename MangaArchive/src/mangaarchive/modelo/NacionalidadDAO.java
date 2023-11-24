@@ -4,21 +4,23 @@
  */
 package mangaarchive.modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JComboBox;
+import mangaarchive.bd.Conexion;
+
 /**
  *
- * @author Alvaro Mora y Bastian Heresmann
+ * @author Emilia
  */
-public class NacionalidadDTO {
-    
+public class NacionalidadDAO {
     private int id;
     private char iso;
     private String pais, gentilicio;
 
-    public NacionalidadDTO(int id, char iso, String pais, String gentilicio) {
-        this.id = id;
-        this.iso = iso;
-        this.pais = pais;
-        this.gentilicio = gentilicio;
+    public NacionalidadDAO() {
     }
 
     public int getId() {
@@ -52,10 +54,22 @@ public class NacionalidadDTO {
     public void setGentilicio(String gentilicio) {
         this.gentilicio = gentilicio;
     }
+    
+    public void consultarNacionalidad(JComboBox combo)
+    {
+        try (Connection conectar = new Conexion().conectar();
+             PreparedStatement stmt = conectar.prepareStatement("SELECT pais FROM nacionalidad");
+             ResultSet rs = stmt.executeQuery()) {
 
-    @Override
-    public String toString() {
-        return "Nacionalidad{" + "id=" + id + ", iso=" + iso + ", pais=" + pais + ", gentilicio=" + gentilicio + '}';
+            while (rs.next()) {
+                combo.addItem(rs.getString("pais"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error SQL: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
     
 }

@@ -17,9 +17,10 @@ public class AutorDAO {
     private int id, nacionalidadID;
     private String nombre;
 
-    public AutorDAO(int nacionalidadID, String nombre) {
-        this.nacionalidadID = nacionalidadID;
+    public AutorDAO(String nombre, int nacionalidadID) {
         this.nombre = nombre;
+        this.nacionalidadID = nacionalidadID;
+    
     }
 
     public AutorDAO() {
@@ -98,53 +99,47 @@ public class AutorDAO {
         return listaAutor;
     } 
     
-    public boolean registrarAutorBD() {
+    public int registrarAutorBD() {
         try {
             Conexion conexion = new Conexion();
             Connection conectar = conexion.conectar();
 
-            // Crear un PreparedStatement con la opción RETURN_GENERATED_KEYS
-            PreparedStatement stmt = conectar.prepareStatement(
-                    "INSERT INTO autor (nombre, nacionalidad_id) VALUES (?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = conectar.prepareStatement("INSERT INTO autor (nombre, nacionalidad_id) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, this.getNombre());
             stmt.setInt(2, this.getNacionalidadID());
 
             // Ejecutar la inserción
             stmt.executeUpdate();
-
+            
             // Obtener las claves generadas (en este caso, el ID autoincremental)
             ResultSet generatedKeys = stmt.getGeneratedKeys();
 
             int lastInsertedId = -1;
             if (generatedKeys.next()) {
                 lastInsertedId = generatedKeys.getInt(1);
-                System.out.println("Último ID de autor insertado: " + lastInsertedId);
+                System.out.println("Último ID de manga insertado: " + lastInsertedId);
             } else {
-                System.out.println("No se pudo obtener el último ID de autor insertado.");
+                System.out.println("No se pudo obtener el último ID de manga insertado.");
             }
-
-            // Cerrar el ResultSet y el PreparedStatement
-            generatedKeys.close();
-            stmt.close();
-
+            
             // Cerrar la conexión
+            generatedKeys.close();
             stmt.close();
             conectar.close();
 
-            return true;
+            return lastInsertedId;
         } catch (SQLException ex) {
             System.out.println("Error SQL - agregarAutor: " + ex.getMessage());
-            return false;
+            return 0;
         } catch (Exception ex) {
             System.out.println("Error - agregarAutor: " + ex.getMessage());
-            return false;
+            return 0;
         }
     }
     
     public AutorDTO obtenerAutorPorNombreBD(String nombre){
-        AutorDTO autor = new AutorDTO();
+        AutorDTO autor = null;
         try{
             
             Conexion conexion = new Conexion();
@@ -156,6 +151,7 @@ public class AutorDAO {
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()){
+                autor = new AutorDTO();
                 autor.setId(rs.getInt("id"));
                 autor.setNombre(nombre);
                 autor.setNacionalidadID(rs.getInt("nacionalidad_id"));
@@ -163,6 +159,8 @@ public class AutorDAO {
             
             stmt.close();
             conectar.close();
+            
+            return autor;
         } catch (SQLException ex){
             System.out.println("Error SQL - obtenerAutorPorNombreBD: "+ex.getMessage());
         } catch (Exception ex){

@@ -6,6 +6,7 @@ package mangaarchive.modelo;
 
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
 import mangaarchive.bd.Conexion;
 
 /**
@@ -86,7 +87,7 @@ public class MangaDAO {
         this.anio = anio;
     }
     
-    public boolean registrarMangaBD() {
+    public int registrarMangaBD() {
         try {
             Conexion conexion = new Conexion();
             Connection conectar = conexion.conectar();
@@ -132,13 +133,13 @@ public class MangaDAO {
             stmt.close();
             conectar.close();
 
-            return true;
+            return lastInsertedId;
         } catch (SQLException ex) {
             System.out.println("Error SQL - agregarManga: " + ex.getMessage());
-            return false;
+            return 0;
         } catch (Exception ex) {
             System.out.println("Error - agregarManga: " + ex.getMessage());
-            return false;
+            return 0;
         }
     }
     
@@ -254,5 +255,6 @@ public class MangaDAO {
             return false;
         }          
     }
+    
     
 }

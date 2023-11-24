@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
 import mangaarchive.bd.Conexion;
 
 /**
@@ -64,5 +65,22 @@ public class TipoGeneroDAO {
         }
 
         return listaTipoGenero;
+    }
+    
+    public void consultarTipoGenero(JComboBox combo)
+    {
+        try (Connection conectar = new Conexion().conectar();
+             PreparedStatement stmt = conectar.prepareStatement("SELECT nombre FROM tipo_genero");
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                combo.addItem(rs.getString("nombre"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error SQL: " + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
 }

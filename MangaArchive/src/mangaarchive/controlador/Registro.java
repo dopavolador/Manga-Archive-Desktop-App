@@ -17,10 +17,14 @@ public class Registro {
         
     }*/
     
-    public boolean registrarMangaBD(String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos){
+    public int registrarMangaBD(String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos){
         MangaDAO manga = new MangaDAO(titulo,precio,anio,autorID,demografiaID,generos);
         return manga.registrarMangaBD();
    }   
     
+    public int registrarAutorBD(String nombre, int nacionalidadID) {
+        AutorDAO autor = new AutorDAO(nombre, nacionalidadID);
+        return autor.registrarAutorBD();
+    }
     
 }

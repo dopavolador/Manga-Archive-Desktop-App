@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-11-2023 a las 20:36:56
+-- Tiempo de generación: 23-11-2023 a las 22:16:51
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.11
 
@@ -29,6 +29,7 @@ USE `equipo_2db`;
 -- Estructura de tabla para la tabla `autor`
 --
 
+DROP TABLE IF EXISTS `autor`;
 CREATE TABLE `autor` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
@@ -41,6 +42,7 @@ CREATE TABLE `autor` (
 -- Estructura de tabla para la tabla `demografia`
 --
 
+DROP TABLE IF EXISTS `demografia`;
 CREATE TABLE `demografia` (
   `id` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL
@@ -63,6 +65,7 @@ INSERT INTO `demografia` (`id`, `nombre`) VALUES
 -- Estructura de tabla para la tabla `genero`
 --
 
+DROP TABLE IF EXISTS `genero`;
 CREATE TABLE `genero` (
   `manga_id` int(11) NOT NULL,
   `tipo_genero_id` int(11) NOT NULL
@@ -74,6 +77,7 @@ CREATE TABLE `genero` (
 -- Estructura de tabla para la tabla `manga`
 --
 
+DROP TABLE IF EXISTS `manga`;
 CREATE TABLE `manga` (
   `id` int(11) NOT NULL,
   `titulo` varchar(100) NOT NULL,
@@ -89,6 +93,7 @@ CREATE TABLE `manga` (
 -- Estructura de tabla para la tabla `nacionalidad`
 --
 
+DROP TABLE IF EXISTS `nacionalidad`;
 CREATE TABLE `nacionalidad` (
   `id` int(11) NOT NULL,
   `iso` char(3) NOT NULL,
@@ -309,6 +314,7 @@ INSERT INTO `nacionalidad` (`id`, `iso`, `pais`, `gentilicio`) VALUES
 -- Estructura de tabla para la tabla `tipo_genero`
 --
 
+DROP TABLE IF EXISTS `tipo_genero`;
 CREATE TABLE `tipo_genero` (
   `id` int(11) NOT NULL,
   `nombre` varchar(20) NOT NULL
@@ -361,6 +367,7 @@ INSERT INTO `tipo_genero` (`id`, `nombre`) VALUES
 -- Estructura de tabla para la tabla `tomo`
 --
 
+DROP TABLE IF EXISTS `tomo`;
 CREATE TABLE `tomo` (
   `manga_id` int(11) NOT NULL,
   `tomo_num` int(11) NOT NULL,
@@ -420,6 +427,12 @@ ALTER TABLE `tomo`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `autor`
+--
+ALTER TABLE `autor`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `manga`

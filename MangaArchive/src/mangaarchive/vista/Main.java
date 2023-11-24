@@ -16,23 +16,18 @@ import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
 public class Main extends javax.swing.JFrame {
 
-    MangaDAO manga = new MangaDAO();
-    AutorDAO autor = new AutorDAO();
-    DemografiaDAO demografia = new DemografiaDAO();
-    ArrayList<Integer> generos = new ArrayList<Integer>();
-    Registro registro = new Registro();
+    ArrayList<Integer> generos;
     
     public Main() {
         initComponents();
         setLocationRelativeTo(null); //CENTRA LA VENTANA
         
-        autoCompletar();
+        //autoCompletar();
         
-        RellenarComboBox("nacionalidad", "pais", cboCountry);
-        cboCountry.setSelectedItem("Japón"); //Japón default
-        
-        RellenarComboBox("demografia", "nombre", cboDemo);
-        RellenarComboBox("tipo_genero", "nombre", cboGenre);
+        new NacionalidadDAO().consultarNacionalidad(cboCountry);
+        cboCountry.setSelectedItem("Japón"); //JAPÓN DEFAULT
+        new DemografiaDAO().consultarDemografia(cboDemo);
+        new TipoGeneroDAO().consultarTipoGenero(cboGenre);
         mostrarManga();
     }
 
@@ -310,30 +305,24 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminar
 
     private void BTNaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNaddActionPerformed
-        if(!this.txtManga.getText().isBlank()){
-            if(!this.txtAuthor.getText().isBlank()){
-                if(!this.txtPrice.getText().isBlank()){
-                    if(!this.txtYear.getText().isBlank()){
-                        manga.setTitulo(this.txtManga.getText());
-                        manga.setPrecio(Integer.parseInt(this.txtPrice.getText()));
-                        manga.setAnio(Integer.parseInt(this.txtYear.getText()));
-                        manga.setAutorID(autor.obtenerAutorPorNombreBD(this.txtAuthor.getText()).getId());
-                        manga.setDemografiaID(this.cboDemo.getSelectedIndex());
-                        this.btnGeneroAddActionPerformed(evt);
-                        manga.setGeneros(generos);
-                        // Tienes que hacer el registro en sistema
-                        if(registro.registrarMangaBD(manga.getTitulo(), manga.getPrecio(), manga.getAnio(), manga.getAutorID(), manga.getDemografiaID(), manga.getGeneros())){
-                            JOptionPane.showMessageDialog(rootPane, "Manga agregado con exito!!!","Comprobacion de Datos",JOptionPane.INFORMATION_MESSAGE);
-                        }else
-                            JOptionPane.showMessageDialog(rootPane, "No se agrego manga a la BD","Comprobacion de Datos",JOptionPane.ERROR_MESSAGE);
-                    }else
-                        JOptionPane.showMessageDialog(rootPane, "Año es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
-                }else
-                    JOptionPane.showMessageDialog(rootPane, "Precio es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
-            }else
-                JOptionPane.showMessageDialog(rootPane, "Autor es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
-        }else
-            JOptionPane.showMessageDialog(rootPane, "Titulo es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
+
+        if (camposObligatoriosCompletos()) {
+            int autorID;
+            AutorDTO autor = new AutorDAO().obtenerAutorPorNombreBD(txtAuthor.getText());
+
+            if (autor != null) {
+                autorID = autor.getId();
+            }
+            else {
+                autorID = new Registro().registrarAutorBD(txtAuthor.getText(), cboCountry.getSelectedIndex() + 1);
+            }
+
+            if (new Registro().registrarMangaBD(txtManga.getText(), Integer.parseInt(txtPrice.getText()), Integer.parseInt(txtYear.getText()), autorID, cboDemo.getSelectedIndex() + 1, generos) != 0) {
+                mostrarMensaje("Comprobación de Datos", "Manga agregado con éxito!!!", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                mostrarMensaje("Comprobación de Datos", "No se agregó manga a la BD", JOptionPane.ERROR_MESSAGE);
+            }
+        }
         mostrarManga();
     }//GEN-LAST:event_BTNaddActionPerformed
 
@@ -452,43 +441,38 @@ public class Main extends javax.swing.JFrame {
         
         DefaultTableModel modelo = (DefaultTableModel) this.tblManga.getModel();
         modelo.setRowCount(0);
-        ArrayList<MangaDTO> lista = manga.obtenerListaManga();
+        ArrayList<MangaDTO> lista = new MangaDAO().obtenerListaManga();
         for (MangaDTO mangaTemp : lista) {
             titulo = mangaTemp.getTitulo();
             precio = mangaTemp.getPrecio();
             anio = mangaTemp.getAnio();
-            nombreAutor = autor.obtenerAutorPorIDBD(mangaTemp.getAutorID()).getNombre();
-            nombreDemografia = demografia.obtenerDemografiaPorIDBD(mangaTemp.getDemografiaID()).getNombre();
-            modelo.addRow(new Object[]{titulo,precio,anio,nombreAutor,nombreDemografia});
+            nombreAutor = new AutorDAO().obtenerAutorPorIDBD(mangaTemp.getAutorID()).getNombre();
+            nombreDemografia = new DemografiaDAO().obtenerDemografiaPorIDBD(mangaTemp.getDemografiaID()).getNombre();
+            modelo.addRow(new Object[]{titulo, precio, anio, nombreAutor, nombreDemografia});
         }
     }
     
-    private void RellenarComboBox(String tabla, String valor, JComboBox combo)
-    {
-        String query = "SELECT " + valor + " FROM " + tabla;
-        
-        try (Connection conectar = new Conexion().conectar();
-             PreparedStatement stmt = conectar.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                combo.addItem(rs.getString(valor));
-            }
-
-        } catch (SQLException ex) {
-            System.out.println("Error SQL: " + ex.getMessage());
-        } catch (Exception ex) {
-            System.out.println("Error: " + ex.getMessage());
-        }
+    private void mostrarMensaje(String titulo, String mensaje, int tipoMensaje) {
+        JOptionPane.showMessageDialog(rootPane, mensaje, titulo, tipoMensaje);
     }
     
+    private boolean camposObligatoriosCompletos() {
+        if (txtManga.getText().isBlank() || txtAuthor.getText().isBlank() || txtPrice.getText().isBlank() || txtYear.getText().isBlank()) {
+            mostrarMensaje("Comprobación de Datos", "Todos los campos obligatorios deben estar llenos", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
+    /*
     // Esta a medias
     private void autoCompletar(){
         try{
-            JList listaSugerencias = new JList(autor.obtenerListaNombreAutor());
+            JList listaSugerencias = new JList(new AutorDAO().obtenerListaNombreAutor());
             AutoCompleteDecorator.decorate(listaSugerencias,this.txtAuthor,ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
         } catch (Exception ex){
             System.out.println("Error: " + ex.getMessage());
         }
     }
+    */
 }
