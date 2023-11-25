@@ -4,10 +4,17 @@
  */
 package mangaarchive.controlador;
 
+import mangaarchive.modelo.MangaDAO;
+
 /**
  *
  * @author Emilia
  */
 public class Eliminacion {
+    
+    public boolean eliminarMangaBD(int id){
+        MangaDAO manga = new MangaDAO();
+        return manga.eliminarManga(id);
+    }
     
 }

@@ -16,7 +16,8 @@ import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
 public class Main extends javax.swing.JFrame {
 
-    ArrayList<Integer> generos;
+    ArrayList<Integer> generos = new ArrayList<Integer>();
+    ArrayList<TipoGeneroDTO> lista = new ArrayList<TipoGeneroDTO>();
     
     public Main() {
         initComponents();
@@ -53,13 +54,16 @@ public class Main extends javax.swing.JFrame {
         txtManga = new javax.swing.JTextField();
         cboGenre = new javax.swing.JComboBox<>();
         btnGeneroAdd = new javax.swing.JButton();
+        BTNClean = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listGenero = new javax.swing.JList<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblManga = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txtFiltro = new javax.swing.JTextField();
         btnVerTomo = new javax.swing.JButton();
         btnFiltro = new javax.swing.JButton();
 
@@ -159,6 +163,18 @@ public class Main extends javax.swing.JFrame {
         });
         jPanel1.add(btnGeneroAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 140, -1, 20));
 
+        BTNClean.setText("Limpiar");
+        BTNClean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNCleanActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BTNClean, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 210, 80, -1));
+
+        jScrollPane2.setViewportView(listGenero);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 10, 130, 140));
+
         tblManga.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -200,9 +216,9 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtFiltroActionPerformed(evt);
             }
         });
 
@@ -234,7 +250,7 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
@@ -247,7 +263,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(btnModificar)
                     .addComponent(btnEliminar)
                     .addComponent(btnBuscar)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVerTomo)
                     .addComponent(btnFiltro))
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -289,6 +305,19 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAuthorActionPerformed
 
     private void btnEliminar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminar
+        
+        eliminarFila();
+        
+       /* MangaDAO manga = new MangaDAO();
+        Eliminacion eliminacion = new Eliminacion();
+        if(!this.txtManga.getText().isBlank()){
+            if(eliminacion.eliminarMangaBD(manga.obtenerMangaPorTituloBD(this.txtManga.getText()).getId()))
+                JOptionPane.showMessageDialog(rootPane, "Manga eliminado","Comprobacion de datos",JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(rootPane, "No se elimino manga de la BD","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
+        }else
+            JOptionPane.showMessageDialog(rootPane, "Titulo es obligatorio","Comprobacion de datos",JOptionPane.ERROR_MESSAGE);
+        mostrarManga();
         /*
         manga = registroManga.buscarPorId(Integer.parseInt(this.txtxId.getText()));
         if(manga.getId()!=0){
@@ -305,7 +334,6 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminar
 
     private void BTNaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNaddActionPerformed
-
         if (camposObligatoriosCompletos()) {
             int autorID;
             AutorDTO autor = new AutorDAO().obtenerAutorPorNombreBD(txtAuthor.getText());
@@ -324,19 +352,38 @@ public class Main extends javax.swing.JFrame {
             }
         }
         mostrarManga();
+        ArrayList<TipoGeneroDTO> lista = new ArrayList<TipoGeneroDTO>();
     }//GEN-LAST:event_BTNaddActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        int filaSeleccionada = this.tblManga.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            DefaultTableModel model = (DefaultTableModel) this.tblManga.getModel();
+
+            String titulo = model.getValueAt(filaSeleccionada, 0).toString();
+
+            MangaDTO manga = new MangaDAO().obtenerMangaPorTituloBD(titulo);
+            AutorDTO autor = new AutorDAO().obtenerAutorPorIDBD(manga.getAutorID());
+            
+            this.txtManga.setText(manga.getTitulo());
+            this.txtAuthor.setText(autor.getNombre());
+            this.txtPrice.setText(String.valueOf(manga.getPrecio()));
+            this.txtYear.setText(String.valueOf(manga.getAnio()));
+            this.cboCountry.setSelectedIndex(autor.getNacionalidadID()-1);
+            this.cboDemo.setSelectedIndex(manga.getDemografiaID()-1);
+            mostrarGeneros(listarGenero(manga.getGeneros()));
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Selecciona una fila para modificar.");
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFiltroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtFiltroActionPerformed
 
     private void btnVerTomoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerTomoActionPerformed
         // TODO add your handling code here:
@@ -367,10 +414,20 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_cboGenreActionPerformed
 
     private void btnGeneroAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneroAddActionPerformed
-
-        generos.add(this.cboGenre.getSelectedIndex());
-        
+        TipoGeneroDTO genero = new TipoGeneroDAO().obtenerGeneroPorIDBD(this.cboGenre.getSelectedIndex()+1);
+        lista.add(genero);
+        generos.add(this.cboGenre.getSelectedIndex()+1);
+        mostrarGeneros(lista);
     }//GEN-LAST:event_btnGeneroAddActionPerformed
+
+    private void BTNCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNCleanActionPerformed
+        this.txtAuthor.setText("");
+        this.txtManga.setText("");
+        this.txtPrice.setText("");
+        this.txtYear.setText("");
+        DefaultListModel<?> modelo = (DefaultListModel<?>) this.listGenero.getModel();
+        modelo.removeAllElements();
+    }//GEN-LAST:event_BTNCleanActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -406,6 +463,7 @@ public class Main extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BTNClean;
     private javax.swing.JButton BTNadd;
     private javax.swing.JLabel authorLabel;
     private javax.swing.JButton btnBuscar;
@@ -422,7 +480,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<String> listGenero;
     private javax.swing.JLabel mangaLabel;
     private javax.swing.JLabel mangaLabel1;
     private javax.swing.JLabel mangaLabel2;
@@ -430,6 +489,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel priceLabel;
     private javax.swing.JTable tblManga;
     private javax.swing.JTextField txtAuthor;
+    private javax.swing.JTextField txtFiltro;
     private javax.swing.JTextField txtManga;
     private javax.swing.JTextField txtPrice;
     private javax.swing.JTextField txtYear;
@@ -462,6 +522,53 @@ public class Main extends javax.swing.JFrame {
             return false;
         }
         return true;
+    }
+    
+    private void eliminarFila(){      
+        int filaSeleccionada = this.tblManga.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            int option = JOptionPane.showConfirmDialog(
+                    rootPane,
+                    "¿Estás seguro de que deseas eliminar esta fila?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (option == JOptionPane.YES_OPTION) {
+                DefaultTableModel model = (DefaultTableModel) this.tblManga.getModel();
+
+                String titulo = model.getValueAt(filaSeleccionada, 0).toString();
+                
+                MangaDAO manga = new MangaDAO();
+                int id = manga.obtenerMangaPorTituloBD(titulo).getId();
+                if(new Eliminacion().eliminarMangaBD(id))
+                    mostrarMensaje("Comprobacion de datos","Manga Eliminado de la BD",JOptionPane.INFORMATION_MESSAGE);
+                else
+                    mostrarMensaje("Comprobacion de datos","Manga no eliminado",JOptionPane.ERROR_MESSAGE);
+                mostrarManga();
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Selecciona una fila para eliminar.");
+        }
+    }
+    
+    private void mostrarGeneros(ArrayList<TipoGeneroDTO> lista){
+        //Crear un objeto DefaultListModel
+        DefaultListModel listModel = new DefaultListModel();
+        //Recorrer el contenido del ArrayList
+        for(int i=0; i<lista.size(); i++) {
+            //Añadir cada elemento del ArrayList en el modelo de la lista
+            listModel.add(i, lista.get(i).getNombre());
+        }
+        //Asociar el modelo de lista al JList
+        this.listGenero.setModel(listModel);
+    }
+    
+    private ArrayList<TipoGeneroDTO> listarGenero(ArrayList<Integer> lista){
+        ArrayList<TipoGeneroDTO> listaGenero = new ArrayList<TipoGeneroDTO>();
+        for (Integer idGenero : lista) {
+            listaGenero.add(new TipoGeneroDAO().obtenerGeneroPorIDBD(idGenero));
+        }
+        return listaGenero;
     }
     
     /*

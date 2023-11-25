@@ -83,4 +83,35 @@ public class TipoGeneroDAO {
             System.out.println("Error: " + ex.getMessage());
         }
     }
+    
+    public TipoGeneroDTO obtenerGeneroPorIDBD(int id) {
+        try {
+            // Establecer la conexión a la base de datos
+            Conexion conexion = new Conexion();
+            Connection conectar = conexion.conectar();
+
+            // Obtener información principal del manga
+            PreparedStatement stmt = conectar.prepareStatement("SELECT * FROM tipo_genero WHERE id = " + id);
+            ResultSet rs = stmt.executeQuery();
+
+            // Procesar los resultados de la consulta principal
+            while (rs.next()) {
+                setId(rs.getInt("id"));
+                setNombre(rs.getString("nombre"));
+            }
+
+            // Cerrar recursos de la base de datos
+            stmt.close();
+            conectar.close();
+        } catch (SQLException ex) {
+            // Manejar errores de SQL
+            System.out.println("Error SQL - obtenerMangaPorIDBD: " + ex.getMessage());
+        } catch (Exception ex) {
+            // Manejar errores generales
+            System.out.println("Error - obtenerMangaPorIDBD: " + ex.getMessage());
+        }
+        // Devolver un objeto MangaDTO con la información obtenida
+        return new TipoGeneroDTO(this.id, this.nombre);
+    }
+    
 }

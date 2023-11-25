@@ -14,7 +14,7 @@ import mangaarchive.bd.Conexion;
  * @author Emilia
  */
 public class MangaDAO {
-    
+
     private int id, precio, autorID, demografiaID, anio;
     private String titulo;
     private ArrayList<Integer> generos;
@@ -86,7 +86,7 @@ public class MangaDAO {
     public void setAnio(int anio) {
         this.anio = anio;
     }
-    
+
     public int registrarMangaBD() {
         try {
             Conexion conexion = new Conexion();
@@ -142,7 +142,7 @@ public class MangaDAO {
             return 0;
         }
     }
-    
+
     public ArrayList<MangaDTO> obtenerListaManga() {
         // Crear una lista para almacenar objetos MangaDTO
         ArrayList<MangaDTO> listaManga = new ArrayList<MangaDTO>();
@@ -178,17 +178,19 @@ public class MangaDAO {
 
         // Devolver la lista de mangas
         return listaManga;
-    }  
-    
+    }
+
     // Método para obtener información de un manga por su ID desde la base de datos
-    public MangaDTO obtenerMangaPorIDBD(int id){
+    public MangaDTO obtenerMangaPorIDBD(int id) {
         try {
             // Establecer la conexión a la base de datos
             Conexion conexion = new Conexion();
             Connection conectar = conexion.conectar();
 
+            ArrayList<Integer> listaGeneros = new ArrayList<Integer>();
+
             // Obtener información principal del manga
-            PreparedStatement stmt = conectar.prepareStatement("SELECT * FROM manga WHERE id = " + id);           
+            PreparedStatement stmt = conectar.prepareStatement("SELECT * FROM manga WHERE id = " + id);
             ResultSet rs = stmt.executeQuery();
 
             // Procesar los resultados de la consulta principal
@@ -198,35 +200,38 @@ public class MangaDAO {
                 setPrecio(rs.getInt("precio"));
                 setAutorID(rs.getInt("autor_id"));
                 setDemografiaID(rs.getInt("demografia_id"));
+                setAnio(rs.getInt("anio"));
             }
 
             // Obtener información sobre los géneros del manga
             rs = stmt.executeQuery("SELECT tipo_genero_id FROM genero WHERE manga_id = " + id);
             while (rs.next()) {
-                getGeneros().add(rs.getInt(1));
+                listaGeneros.add(rs.getInt(1));
             }
+
+            setGeneros(listaGeneros);
 
             // Cerrar recursos de la base de datos
             stmt.close();
-            conectar.close();   
+            conectar.close();
         } catch (SQLException ex) {
             // Manejar errores de SQL
-            System.out.println("Error SQL - obtenerMangaPorIDBD: "+ex.getMessage());
+            System.out.println("Error SQL - obtenerMangaPorIDBD: " + ex.getMessage());
         } catch (Exception ex) {
             // Manejar errores generales
-            System.out.println("Error - obtenerMangaPorIDBD: "+ex.getMessage());
-        } 
+            System.out.println("Error - obtenerMangaPorIDBD: " + ex.getMessage());
+        }
         // Devolver un objeto MangaDTO con la información obtenida
         return new MangaDTO(this.id, this.titulo, this.precio, this.anio, this.autorID, this.demografiaID, this.generos);
-    }   
-    
+    }
+
     // Método para eliminar un manga y sus registros asociados por su ID desde la base de datos
-    public boolean eliminarManga(int id){
+    public boolean eliminarManga(int id) {
         try {
             // Establecer la conexión a la base de datos
             Conexion conexion = new Conexion();
             Connection conectar = conexion.conectar();
-            Statement stmt = conectar.createStatement();  
+            Statement stmt = conectar.createStatement();
 
             // Eliminar registros asociados al manga por su ID en las tablas de género y tomo
             stmt.executeUpdate("DELETE FROM genero WHERE manga_id = " + id);
@@ -243,18 +248,92 @@ public class MangaDAO {
             return true;
         } catch (SQLException ex) {
             // Manejar errores de SQL e imprimir un mensaje
-            System.out.println("Error SQL - eliminarManga: "+ex.getMessage());
+            System.out.println("Error SQL - eliminarManga: " + ex.getMessage());
 
             // Indicar que la eliminación no fue exitosa
             return false;
         } catch (Exception ex) {
             // Manejar errores generales e imprimir un mensaje
-            System.out.println("Error - eliminarManga: "+ex.getMessage());
+            System.out.println("Error - eliminarManga: " + ex.getMessage());
 
             // Indicar que la eliminación no fue exitosa
             return false;
-        }          
+        }
     }
-    
-    
+
+    // Método para obtener información de un manga por su titulo desde la base de datos
+    public MangaDTO obtenerMangaPorTituloBD(String titulo) {
+        try {
+            // Establecer la conexión a la base de datos
+            Conexion conexion = new Conexion();
+            Connection conectar = conexion.conectar();
+
+            ArrayList<Integer> listaGeneros = new ArrayList<Integer>();
+
+            // Obtener información principal del manga
+            PreparedStatement stmt = conectar.prepareStatement("SELECT * FROM manga WHERE titulo = ?");
+            stmt.setString(1, titulo);
+            ResultSet rs = stmt.executeQuery();
+
+            // Procesar los resultados de la consulta principal
+            while (rs.next()) {
+                setId(rs.getInt("id"));
+                setTitulo(rs.getString("titulo"));
+                setPrecio(rs.getInt("precio"));
+                setAutorID(rs.getInt("autor_id"));
+                setDemografiaID(rs.getInt("demografia_id"));
+                setAnio(rs.getInt("anio"));
+            }
+
+            // Obtener información sobre los géneros del manga
+            rs = stmt.executeQuery("SELECT tipo_genero_id FROM genero WHERE manga_id = " + getId());
+            while (rs.next()) {
+                listaGeneros.add(rs.getInt(1));
+            }
+
+            setGeneros(listaGeneros);
+
+            // Cerrar recursos de la base de datos
+            stmt.close();
+            conectar.close();
+        } catch (SQLException ex) {
+            // Manejar errores de SQL
+            System.out.println("Error SQL - obtenerMangaPorTituloBD: " + ex.getMessage());
+        } catch (Exception ex) {
+            // Manejar errores generales
+            System.out.println("Error - obtenerMangaPorTituloBD: " + ex.getMessage());
+        }
+        // Devolver un objeto MangaDTO con la información obtenida
+        return new MangaDTO(this.id, this.titulo, this.precio, this.anio, this.autorID, this.demografiaID, this.generos);
+    }
+
+    public boolean modificarManga() {
+        try {
+            Conexion conexion = new Conexion();
+            Connection conectar = conexion.conectar();
+            //Declaro un String para guardar la QUERY que se ejecuta en la BD
+            String query = "UPDATE manga SET titulo=?,precio=?,anio=?,autor_id=?,demografia_id=? WHERE id=?";
+            //declaro el PreparedStatement para configurar la instrucción a ejecutar
+            PreparedStatement stmt = conectar.prepareStatement(query);
+            //Reemplazo los '?' en el stmt       
+            stmt.setString(1, getTitulo());
+            stmt.setInt(2, getPrecio());
+            stmt.setInt(3, getAnio());
+            stmt.setInt(4, getAutorID());
+            stmt.setInt(5, getDemografiaID());
+            //ejecuto la sentencia
+            stmt.executeUpdate();
+            //cierro las conexiones
+            stmt.close();
+            conectar.close();
+            return true;
+        } catch (SQLException ex) {
+            System.out.println("Error SQL - modificarManga: " + ex.getMessage());
+            return false;
+        } catch (Exception ex) {
+            System.out.println("Error - modificarManga: " + ex.getMessage());
+            return false;
+        }
+    }
+
 }
