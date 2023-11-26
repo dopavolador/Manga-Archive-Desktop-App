@@ -13,9 +13,8 @@ import mangaarchive.modelo.MangaDAO;
  */
 public class Actualizacion {
     
-    public boolean actualizarMangaBD(String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos){
-        MangaDAO manga = new MangaDAO(titulo,precio,anio,autorID,demografiaID,generos);
-        return manga.modificarManga();
+    public boolean actualizarMangaBD(int id, String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos){
+        return new MangaDAO().modificarManga(id,titulo,precio,anio,autorID,demografiaID,generos);
    }  
     
 }

@@ -307,7 +307,7 @@ public class MangaDAO {
         return new MangaDTO(this.id, this.titulo, this.precio, this.anio, this.autorID, this.demografiaID, this.generos);
     }
 
-    public boolean modificarManga() {
+    public boolean modificarManga(int id, String titulo, int precio, int anio, int autorID, int demografiaID, ArrayList<Integer> generos) {
         try {
             Conexion conexion = new Conexion();
             Connection conectar = conexion.conectar();
@@ -316,13 +316,24 @@ public class MangaDAO {
             //declaro el PreparedStatement para configurar la instrucción a ejecutar
             PreparedStatement stmt = conectar.prepareStatement(query);
             //Reemplazo los '?' en el stmt       
-            stmt.setString(1, getTitulo());
-            stmt.setInt(2, getPrecio());
-            stmt.setInt(3, getAnio());
-            stmt.setInt(4, getAutorID());
-            stmt.setInt(5, getDemografiaID());
+            stmt.setString(1, titulo);
+            stmt.setInt(2, precio);
+            stmt.setInt(3, anio);
+            stmt.setInt(4, autorID);
+            stmt.setInt(5, demografiaID);
+            stmt.setInt(6, id);
             //ejecuto la sentencia
             stmt.executeUpdate();
+            
+            stmt.executeUpdate("DELETE FROM genero WHERE manga_id = " + id);
+            
+            for (int generoID : generos) {
+                stmt = conectar.prepareStatement("INSERT INTO genero (manga_id, tipo_genero_id) VALUES (?, ?)");
+                stmt.setInt(1, id);
+                stmt.setInt(2, generoID);
+                stmt.executeUpdate();
+            }
+            
             //cierro las conexiones
             stmt.close();
             conectar.close();

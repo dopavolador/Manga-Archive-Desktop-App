@@ -73,6 +73,7 @@ public class TipoGeneroDAO {
              PreparedStatement stmt = conectar.prepareStatement("SELECT nombre FROM tipo_genero");
              ResultSet rs = stmt.executeQuery()) {
 
+            combo.addItem("");
             while (rs.next()) {
                 combo.addItem(rs.getString("nombre"));
             }

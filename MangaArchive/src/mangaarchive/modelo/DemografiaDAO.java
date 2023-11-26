@@ -100,7 +100,8 @@ public class DemografiaDAO {
         try (Connection conectar = new Conexion().conectar();
              PreparedStatement stmt = conectar.prepareStatement("SELECT nombre FROM demografia");
              ResultSet rs = stmt.executeQuery()) {
-
+            
+            combo.addItem("");
             while (rs.next()) {
                 combo.addItem(rs.getString("nombre"));
             }
