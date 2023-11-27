@@ -200,4 +200,30 @@ public class AutorDAO {
         return new AutorDTO(this.getId(), this.getNombre(), this.getNacionalidadID());
     }   
     
+    
+    public boolean modificarAutor(int autorID, String nombre, int nacionalidadID) {
+        try {
+            Conexion conexion = new Conexion();
+            Connection conectar = conexion.conectar();
+            //declaro el PreparedStatement para configurar la instrucción a ejecutar
+            PreparedStatement stmt = conectar.prepareStatement("UPDATE autor SET nombre=?,nacionalidad_id=? WHERE id=?");
+            //Reemplazo los '?' en el stmt       
+            stmt.setString(1, nombre);
+            stmt.setInt(2, nacionalidadID);
+            stmt.setInt(3, autorID);
+            //ejecuto la sentencia
+            stmt.executeUpdate();       
+            
+            //cierro las conexiones
+            stmt.close();
+            conectar.close();
+            return true;
+        } catch (SQLException ex) {
+            System.out.println("Error SQL - modificarAutor: " + ex.getMessage());
+            return false;
+        } catch (Exception ex) {
+            System.out.println("Error - modificarAutor: " + ex.getMessage());
+            return false;
+        }
+    }
 }

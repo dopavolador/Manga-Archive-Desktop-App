@@ -1,17 +1,10 @@
 package mangaarchive.vista;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
-import mangaarchive.bd.*;
 import mangaarchive.controlador.*;
 import mangaarchive.modelo.*;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
 public class Main extends javax.swing.JFrame {
 
@@ -27,13 +20,20 @@ public class Main extends javax.swing.JFrame {
         cboCountry.setSelectedItem("Japón"); //JAPÓN DEFAULT
         new DemografiaDAO().consultarDemografia(cboDemo);
         new TipoGeneroDAO().consultarTipoGenero(cboGenre);
-        mostrarManga();
+        new MangaDAO().mostrarManga(tblManga);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnFiltro = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblManga = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         mangaLabel = new javax.swing.JLabel();
         txtAuthor = new javax.swing.JTextField();
@@ -55,17 +55,76 @@ public class Main extends javax.swing.JFrame {
         BTNClean = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         listGenero = new javax.swing.JList<>();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblManga = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        btnModificar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
-        btnBuscar = new javax.swing.JButton();
-        btnFiltro = new javax.swing.JButton();
-        txtBusqueda = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MANGA ARCHIVE");
+
+        jPanel3.setBackground(new java.awt.Color(0, 0, 102));
+
+        jPanel2.setBackground(new java.awt.Color(102, 102, 255));
+
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminar(evt);
+            }
+        });
+
+        btnFiltro.setText("Filtros");
+        btnFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltroActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(btnModificar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 400, Short.MAX_VALUE)
+                .addComponent(btnFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnFiltro))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        tblManga.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "TITULO", "PRECIO", "AÑO", "AUTOR", "DEMOGRAFIA"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblManga);
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -94,6 +153,11 @@ public class Main extends javax.swing.JFrame {
                 txtPriceActionPerformed(evt);
             }
         });
+        txtPrice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPriceKeyTyped(evt);
+            }
+        });
         jPanel1.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 157, -1));
 
         BTNadd.setText("Ingresar");
@@ -102,7 +166,7 @@ public class Main extends javax.swing.JFrame {
                 BTNaddActionPerformed(evt);
             }
         });
-        jPanel1.add(BTNadd, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 170, 80, -1));
+        jPanel1.add(BTNadd, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 210, 100, -1));
 
         lbl.setFont(new java.awt.Font("Cascadia Code", 0, 24)); // NOI18N
         lbl.setText("MANGA ARCHIVE");
@@ -124,6 +188,11 @@ public class Main extends javax.swing.JFrame {
         txtYear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtYearActionPerformed(evt);
+            }
+        });
+        txtYear.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtYearKeyTyped(evt);
             }
         });
         jPanel1.add(txtYear, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 60, 157, -1));
@@ -166,94 +235,46 @@ public class Main extends javax.swing.JFrame {
                 BTNCleanActionPerformed(evt);
             }
         });
-        jPanel1.add(BTNClean, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 210, 80, -1));
+        jPanel1.add(BTNClean, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 240, 100, -1));
 
+        listGenero.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listGeneroValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(listGenero);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 10, 130, 140));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 60, 100, 120));
 
-        tblManga.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "TITULO", "PRECIO", "AÑO", "AUTOR", "DEMOGRAFIA"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tblManga);
-
-        jPanel2.setBackground(new java.awt.Color(102, 102, 255));
-
-        btnModificar.setText("Modificar");
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
-            }
-        });
-
-        btnEliminar.setText("Eliminar");
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminar(evt);
-            }
-        });
-
-        btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
-
-        btnFiltro.setText("Filtros");
-        btnFiltro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFiltroActionPerformed(evt);
-            }
-        });
-
-        txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBusquedaActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(btnModificar)
-                .addGap(18, 18, 18)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
-                .addComponent(btnFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 703, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE))
+                            .addGap(0, 8, Short.MAX_VALUE)))
+                    .addContainerGap()))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnModificar)
-                    .addComponent(btnEliminar)
-                    .addComponent(btnBuscar)
-                    .addComponent(btnFiltro)
-                    .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 544, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -261,23 +282,16 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -292,35 +306,37 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAuthorActionPerformed
 
     private void btnEliminar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminar
-
-        eliminarFila();
+        eliminarFila(this.tblManga.getSelectedRow());
 
     }//GEN-LAST:event_btnEliminar
 
     private void BTNaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNaddActionPerformed
         if (camposObligatoriosCompletos()) {
-            int autorID;
+            int autorID, pais = cboCountry.getSelectedIndex() + 1;
             AutorDTO autor = new AutorDAO().obtenerAutorPorNombreBD(txtAuthor.getText());
             if (autor != null) {
                 autorID = autor.getId();
+                new Actualizacion().actualizarAutorBD(autorID, txtAuthor.getText().trim(), pais);
             } else {
-                autorID = new Registro().registrarAutorBD(txtAuthor.getText(), cboCountry.getSelectedIndex() + 1);
+                autorID = new Registro().registrarAutorBD(txtAuthor.getText(), pais);
             }
             if (estaModificando != 0) {
-                if (new Actualizacion().actualizarMangaBD(estaModificando, txtManga.getText(), Integer.parseInt(txtPrice.getText()), Integer.parseInt(txtYear.getText()), autorID, cboDemo.getSelectedIndex(), generos)) {
+                if (new Actualizacion().actualizarMangaBD(estaModificando, txtManga.getText().trim(), Integer.parseInt(txtPrice.getText().trim()), Integer.parseInt(txtYear.getText().trim()), autorID, cboDemo.getSelectedIndex(), generos)) {
                     mostrarMensaje("Comprobación de Datos", "Manga modificado", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     mostrarMensaje("Comprobación de Datos", "Manga no modificado", JOptionPane.ERROR_MESSAGE);
                 }
+                modificarManga(0);
             } else {
 
-                if (new Registro().registrarMangaBD(txtManga.getText(), Integer.parseInt(txtPrice.getText()), Integer.parseInt(txtYear.getText()), autorID, cboDemo.getSelectedIndex(), generos) != 0) {
+                if (new Registro().registrarMangaBD(txtManga.getText().trim(), Integer.parseInt(txtPrice.getText().trim()), Integer.parseInt(txtYear.getText().trim()), autorID, cboDemo.getSelectedIndex(), generos) != 0) {
                     mostrarMensaje("Comprobación de Datos", "Manga agregado con éxito!!!", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     mostrarMensaje("Comprobación de Datos", "No se agregó manga a la BD", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            mostrarManga();
+            limpiarCampos();
+            new MangaDAO().mostrarManga(tblManga);
             generos.clear();
         }
     }//GEN-LAST:event_BTNaddActionPerformed
@@ -344,20 +360,18 @@ public class Main extends javax.swing.JFrame {
                 this.txtPrice.setText(String.valueOf(manga.getPrecio()));
                 this.txtYear.setText(String.valueOf(manga.getAnio()));
                 this.cboCountry.setSelectedIndex(autor.getNacionalidadID() - 1);
-                this.cboDemo.setSelectedIndex(manga.getDemografiaID() - 1);
+                this.cboDemo.setSelectedIndex(manga.getDemografiaID());
+                this.cboGenre.setSelectedIndex(0);
                 mostrarGeneros(listarGenero(manga.getGeneros()));
                 generos = manga.getGeneros();
 
                 modificarManga(manga.getId());
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Selecciona una fila para transferir.");
+
+                mostrarMensaje("Modificar manga", "Selecciona una fila para modificar.", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnModificarActionPerformed
-
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltroActionPerformed
 
@@ -397,10 +411,38 @@ public class Main extends javax.swing.JFrame {
         limpiarCampos();
     }//GEN-LAST:event_BTNCleanActionPerformed
 
-    private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
+    private void listGeneroValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listGeneroValueChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBusquedaActionPerformed
+        eliminarElementoSeleccionado();
+    }//GEN-LAST:event_listGeneroValueChanged
 
+    private void txtPriceKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPriceKeyTyped
+
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c)) {
+                evt.consume();
+        }
+    }//GEN-LAST:event_txtPriceKeyTyped
+
+    private void txtYearKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtYearKeyTyped
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c)) {
+                evt.consume();
+        }
+    }//GEN-LAST:event_txtYearKeyTyped
+
+    private void eliminarElementoSeleccionado() {
+        int indiceSeleccionado = listGenero.getSelectedIndex();
+        if (indiceSeleccionado != -1) {
+            ListModel<?> modeloLista = this.listGenero.getModel();
+            if (modeloLista instanceof DefaultListModel<?>) {
+                DefaultListModel<?> modelo = (DefaultListModel<?>) modeloLista;
+                modelo.remove(indiceSeleccionado);
+                generos.remove(indiceSeleccionado);
+            }
+        }
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -439,7 +481,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton BTNClean;
     private javax.swing.JButton BTNadd;
     private javax.swing.JLabel authorLabel;
-    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnFiltro;
     private javax.swing.JButton btnGeneroAdd;
@@ -450,6 +491,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel demographicLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl;
@@ -461,28 +503,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel priceLabel;
     public static javax.swing.JTable tblManga;
     private javax.swing.JTextField txtAuthor;
-    private javax.swing.JTextField txtBusqueda;
     private javax.swing.JTextField txtManga;
     private javax.swing.JTextField txtPrice;
     private javax.swing.JTextField txtYear;
     // End of variables declaration//GEN-END:variables
-
-    private void mostrarManga() {
-        String titulo, nombreAutor, nombreDemografia;
-        int precio, anio;
-
-        DefaultTableModel modelo = (DefaultTableModel) this.tblManga.getModel();
-        modelo.setRowCount(0);
-        ArrayList<MangaDTO> lista = new MangaDAO().obtenerListaManga();
-        for (MangaDTO mangaTemp : lista) {
-            titulo = mangaTemp.getTitulo();
-            precio = mangaTemp.getPrecio();
-            anio = mangaTemp.getAnio();
-            nombreAutor = new AutorDAO().obtenerAutorPorIDBD(mangaTemp.getAutorID()).getNombre();
-            nombreDemografia = new DemografiaDAO().obtenerDemografiaPorIDBD(mangaTemp.getDemografiaID()).getNombre();
-            modelo.addRow(new Object[]{titulo, precio, anio, nombreAutor, nombreDemografia});
-        }
-    }
 
     private void mostrarMensaje(String titulo, String mensaje, int tipoMensaje) {
         JOptionPane.showMessageDialog(rootPane, mensaje, titulo, tipoMensaje);
@@ -493,12 +517,16 @@ public class Main extends javax.swing.JFrame {
             mostrarMensaje("Comprobación de Datos", "Todos los campos obligatorios deben estar llenos", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if (!validarAnio(Integer.parseInt(txtYear.getText().trim())))
+        {
+            mostrarMensaje("Comprobación de Datos", "El año seleccionado no es válido.", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         return true;
     }
 
-    private void eliminarFila() {
-        int filaSeleccionada = this.tblManga.getSelectedRow();
-        if (filaSeleccionada != -1) {
+    private void eliminarFila(int fila) {
+        if (fila != -1) {
             int option = JOptionPane.showConfirmDialog(
                     rootPane,
                     "¿Estás seguro de que deseas eliminar esta fila?",
@@ -508,19 +536,19 @@ public class Main extends javax.swing.JFrame {
             if (option == JOptionPane.YES_OPTION) {
                 DefaultTableModel model = (DefaultTableModel) this.tblManga.getModel();
 
-                String titulo = model.getValueAt(filaSeleccionada, 0).toString();
+                String titulo = model.getValueAt(fila, 0).toString();
 
                 MangaDAO manga = new MangaDAO();
                 int id = manga.obtenerMangaPorTituloBD(titulo).getId();
                 if (new Eliminacion().eliminarMangaBD(id)) {
-                    mostrarMensaje("Comprobacion de datos", "Manga Eliminado de la BD", JOptionPane.INFORMATION_MESSAGE);
+                    mostrarMensaje("Comprobacion de datos", "Manga eliminado", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     mostrarMensaje("Comprobacion de datos", "Manga no eliminado", JOptionPane.ERROR_MESSAGE);
                 }
-                mostrarManga();
+                new MangaDAO().mostrarManga(tblManga);
             }
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Selecciona una fila para eliminar.");
+            mostrarMensaje("Eliminar manga", "Selecciona una fila para eliminar.", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -555,6 +583,9 @@ public class Main extends javax.swing.JFrame {
         this.txtManga.setText("");
         this.txtPrice.setText("");
         this.txtYear.setText("");
+        this.cboDemo.setSelectedIndex(0);
+        this.cboCountry.setSelectedItem("Japón"); //JAPÓN DEFAULT
+        this.cboGenre.setSelectedIndex(0);
         ListModel<?> modeloLista = this.listGenero.getModel();
         if (modeloLista instanceof DefaultListModel<?>) {
             DefaultListModel<?> modelo = (DefaultListModel<?>) modeloLista;
@@ -573,6 +604,12 @@ public class Main extends javax.swing.JFrame {
             }
         }
         return true;
+    }
+    
+    public boolean validarAnio(int anio)
+    {
+        int anioActual = java.time.Year.now().getValue();
+        return anio >= 1900 && anio <= anioActual;
     }
 
 }

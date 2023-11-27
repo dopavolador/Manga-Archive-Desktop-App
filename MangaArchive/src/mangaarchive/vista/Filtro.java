@@ -13,6 +13,7 @@ import mangaarchive.modelo.DemografiaDAO;
 import mangaarchive.modelo.MangaDAO;
 import mangaarchive.modelo.MangaDTO;
 import mangaarchive.modelo.TipoGeneroDAO;
+import static mangaarchive.vista.Main.tblManga;
 
 /**
  *
@@ -28,6 +29,7 @@ public class Filtro extends javax.swing.JFrame {
     public Filtro(JTable lista) {
         initComponents();
         this.lista = lista;
+        
         new DemografiaDAO().consultarDemografia(cboDemografia);
         new TipoGeneroDAO().consultarTipoGenero(cboGenero);
     }
@@ -48,6 +50,11 @@ public class Filtro extends javax.swing.JFrame {
         btnFiltrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         cboGenero.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -109,32 +116,19 @@ public class Filtro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
-        String titulo, nombreAutor, nombreDemografia;
-        int precio, anio;
-
-        DefaultTableModel modelo = (DefaultTableModel) lista.getModel();
-        modelo.setRowCount(0);
-        ArrayList<MangaDTO> listaManga = new MangaDAO().obtenerListaManga();
-        int ultimoID = -1;
-        for (MangaDTO mangaTemp : listaManga) {
-            titulo = mangaTemp.getTitulo();
-            precio = mangaTemp.getPrecio();
-            anio = mangaTemp.getAnio();
-            nombreAutor = new AutorDAO().obtenerAutorPorIDBD(mangaTemp.getAutorID()).getNombre();
-            nombreDemografia = new DemografiaDAO().obtenerDemografiaPorIDBD(mangaTemp.getDemografiaID()).getNombre();
-            for (Integer generoID : mangaTemp.getGeneros()) {
-                if(generoID==cboGenero.getSelectedIndex()){
-                    modelo.addRow(new Object[]{titulo, precio, anio, nombreAutor, nombreDemografia});
-                    ultimoID=mangaTemp.getId();
-                }
-            } 
-            if(nombreDemografia.equalsIgnoreCase(cboDemografia.getSelectedItem().toString()) && ultimoID!=mangaTemp.getId())
-                modelo.addRow(new Object[]{titulo, precio, anio, nombreAutor, nombreDemografia});
-            
-        }
-
+        int filtroGenero = cboGenero.getSelectedIndex();
+        int filtroDemografia = cboDemografia.getSelectedIndex();
+        
+        if(filtroGenero != 0 || filtroDemografia != 0)
+            filtrar(filtroGenero, filtroDemografia);
+        else
+            new MangaDAO().mostrarManga(tblManga);
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        new MangaDAO().mostrarManga(tblManga);
+    }//GEN-LAST:event_formWindowClosed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFiltrar;
@@ -143,4 +137,26 @@ public class Filtro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
+
+    private void filtrar(int genero, int demografia){
+        String titulo, nombreAutor, nombreDemografia;
+        int precio, anio;
+
+        DefaultTableModel modelo = (DefaultTableModel) lista.getModel();
+        modelo.setRowCount(0);
+        ArrayList<MangaDTO> listaManga = new MangaDAO().obtenerListaManga();
+
+        for (MangaDTO mangaTemp : listaManga) {
+            titulo = mangaTemp.getTitulo();
+            precio = mangaTemp.getPrecio();
+            anio = mangaTemp.getAnio();
+            nombreAutor = new AutorDAO().obtenerAutorPorIDBD(mangaTemp.getAutorID()).getNombre();
+            nombreDemografia = new DemografiaDAO().obtenerDemografiaPorIDBD(mangaTemp.getDemografiaID()).getNombre();
+
+            // Verificar si tanto genero como demografía son iguales a 0 o si coinciden con los valores del manga actual
+            if ((genero == 0 || mangaTemp.getGeneros().contains(genero)) && (demografia == 0 || mangaTemp.getDemografiaID() == demografia)) {
+                modelo.addRow(new Object[]{titulo, precio, anio, nombreAutor, nombreDemografia});
+            }
+        }
+    }
 }

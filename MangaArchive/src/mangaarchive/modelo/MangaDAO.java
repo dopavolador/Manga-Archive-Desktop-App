@@ -7,6 +7,8 @@ package mangaarchive.modelo;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import mangaarchive.bd.Conexion;
 
 /**
@@ -344,6 +346,23 @@ public class MangaDAO {
         } catch (Exception ex) {
             System.out.println("Error - modificarManga: " + ex.getMessage());
             return false;
+        }
+    }
+    
+    public void mostrarManga(JTable tabla) {
+        String titulo, nombreAutor, nombreDemografia;
+        int precio, anio;
+
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.setRowCount(0);
+        ArrayList<MangaDTO> lista = new MangaDAO().obtenerListaManga();
+        for (MangaDTO mangaTemp : lista) {
+            titulo = mangaTemp.getTitulo();
+            precio = mangaTemp.getPrecio();
+            anio = mangaTemp.getAnio();
+            nombreAutor = new AutorDAO().obtenerAutorPorIDBD(mangaTemp.getAutorID()).getNombre();
+            nombreDemografia = new DemografiaDAO().obtenerDemografiaPorIDBD(mangaTemp.getDemografiaID()).getNombre();
+            modelo.addRow(new Object[]{titulo, precio, anio, nombreAutor, nombreDemografia});
         }
     }
 
